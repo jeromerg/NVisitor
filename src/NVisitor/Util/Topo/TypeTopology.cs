@@ -1,26 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using NVisitor.Util.Quality;
 
-namespace NVisitor.Topo
+namespace NVisitor.Util.Topo
 {
     public class TypeTopology
     {
-        private readonly System.Type mType;
-        private readonly Dictionary<System.Type, HashSet<System.Type>> mAllTypesWithChildren = new Dictionary<System.Type, HashSet<System.Type>>();
+        private readonly Type mType;
+        private readonly Dictionary<Type, HashSet<Type>> mAllTypesWithChildren = new Dictionary<Type, HashSet<Type>>();
 
-        public TypeTopology(System.Type type)
+        public TypeTopology(Type type)
         {
             mType = type;
-            mAllTypesWithChildren.Add(type, new HashSet<System.Type>());
+            mAllTypesWithChildren.Add(type, new HashSet<Type>());
             CollectAllParentTypes(type);
         }
 
+        /// <exception cref="TargetTypeNotResolvedException"></exception>
         [CanBeNull]
-        public System.Type ResolveBestUnambiguousTargetType(HashSet<System.Type> targetCandidates)
+        public Type ResolveBestUnambiguousTargetType(HashSet<Type> targetCandidates)
         {
             var excludedTypes = new List<TargetTypeInfo>();
 
-            var concernedCandidates = new HashSet<System.Type>();
+            var concernedCandidates = new HashSet<Type>();
             foreach (var candidate in targetCandidates)
             {
                 if (!mAllTypesWithChildren.ContainsKey(candidate))
@@ -38,9 +41,9 @@ namespace NVisitor.Topo
                     continue;
                 }
 
-                var parents = new HashSet<System.Type>(GetAllParents(candidate));
+                var parents = new HashSet<Type>(GetAllParents(candidate));
 
-                System.Type candidateInClosure = candidate;
+                Type candidateInClosure = candidate;
                 if (concernedCandidates.Any(otherCandidate => otherCandidate != candidateInClosure && !parents.Contains(otherCandidate)))
                 {
                     excludedTypes.Add(new TargetTypeInfo(candidate, TargetTypeStatus.AmbiguousMatch));
@@ -53,7 +56,7 @@ namespace NVisitor.Topo
             throw new TargetTypeNotResolvedException(mType, excludedTypes);
         }
 
-        private void CollectAllParentTypes(System.Type type)
+        private void CollectAllParentTypes(Type type)
         {
             if (type.BaseType != null)
             {
@@ -66,12 +69,12 @@ namespace NVisitor.Topo
             }
         }
 
-        private void AddParentAndLink(System.Type type, System.Type parent)
+        private void AddParentAndLink(Type type, Type parent)
         {
-            HashSet<System.Type> parentsChildren;
+            HashSet<Type> parentsChildren;
             if (!mAllTypesWithChildren.TryGetValue(parent, out parentsChildren))
             {
-                parentsChildren = new HashSet<System.Type>();
+                parentsChildren = new HashSet<Type>();
                 mAllTypesWithChildren.Add(parent, parentsChildren);
             }
 
@@ -80,7 +83,7 @@ namespace NVisitor.Topo
             CollectAllParentTypes(parent);
         }
 
-        private IEnumerable<System.Type> GetAllParents(System.Type type)
+        private IEnumerable<Type> GetAllParents(Type type)
         {
             if (type.BaseType != null)
             {
@@ -98,7 +101,7 @@ namespace NVisitor.Topo
 
         }
 
-        private bool IsAnyTopologicalChildACandidate(System.Type type, HashSet<System.Type> candidates)
+        private bool IsAnyTopologicalChildACandidate(Type type, HashSet<Type> candidates)
         {
             foreach (var child in mAllTypesWithChildren[type])
             {

@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NVisitor.Topo;
+using NVisitor.Api.Marker;
+using NVisitor.Util.Quality;
+using NVisitor.Util.Topo;
 
-namespace NVisitor
+namespace NVisitor.Api
 {
     public abstract class Director<TDir, TNod> : IDirector<TNod>
         where TDir : IDirector<TNod>
@@ -63,11 +65,19 @@ namespace NVisitor
         private Type FindNearestVisitorNodeType(Type nodeType)
         {
             Type nearestVisitorNodeType;
+            
             if (!mNearestVisitorNodeTypeCache.TryGetValue(nodeType, out nearestVisitorNodeType))
             {
-                var typeTopology = new TypeTopology(nodeType);
-                nearestVisitorNodeType = typeTopology
-                    .ResolveBestUnambiguousTargetType(new HashSet<Type>(mVisitorsByNodeType.Keys));
+                try
+                {
+                    var typeTopology = new TypeTopology(nodeType);
+                    nearestVisitorNodeType = typeTopology
+                        .ResolveBestUnambiguousTargetType(new HashSet<Type>(mVisitorsByNodeType.Keys));
+                }
+                catch (TargetTypeNotResolvedException e)
+                {                    
+                    throw new VisitorNotFoundException(e);
+                }
             }
             return nearestVisitorNodeType;
         }

@@ -9,7 +9,7 @@
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable InconsistentNaming
 
-namespace NVisitor
+namespace NVisitor.Util.Quality
 {
     /// <summary>
     /// Indicates that the value of the marked element could be <c>null</c> sometimes,

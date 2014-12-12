@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace NVisitor.Topo
+namespace NVisitor.Util.Topo
 {
-    public class TargetTypeNotResolvedException : Exception
+    internal class TargetTypeNotResolvedException : Exception
     {
-        private readonly System.Type mType;
+        private readonly Type mType;
         private readonly List<TargetTypeInfo> mCandidateInfos = new List<TargetTypeInfo>();
 
-        public TargetTypeNotResolvedException(System.Type type, IEnumerable<TargetTypeInfo> candidateStatuses)
+        public TargetTypeNotResolvedException(Type type, IEnumerable<TargetTypeInfo> candidateStatuses)
         {
             mType = type;
             mCandidateInfos.AddRange(candidateStatuses);
@@ -18,6 +18,16 @@ namespace NVisitor.Topo
 
         protected TargetTypeNotResolvedException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
+        }
+
+        public Type Type
+        {
+            get { return mType; }
+        }
+
+        public List<TargetTypeInfo> CandidateInfos
+        {
+            get { return mCandidateInfos; }
         }
 
         public override string Message

@@ -1,4 +1,4 @@
-﻿namespace NVisitor.Topo
+﻿namespace NVisitor.Util.Topo
 {
     public enum TargetTypeStatus
     {
