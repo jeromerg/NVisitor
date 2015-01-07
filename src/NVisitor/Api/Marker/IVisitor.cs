@@ -7,8 +7,8 @@ namespace NVisitor.Api.Marker
 
     /// <summary>Used for DI-Container initialization of related Directors</summary>
     // ReSharper disable once UnusedTypeParameter
-    public interface IVisitor<in TDir, in TNodeBase> : IVisitor
-        where TDir : IDirector<TNodeBase>
+    public interface IVisitor<in TFamily, in TDirector> : IVisitor
+        where TDirector : IDirector<TFamily>
     {
     }
 }

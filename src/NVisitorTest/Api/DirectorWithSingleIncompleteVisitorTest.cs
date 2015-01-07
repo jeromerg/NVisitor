@@ -9,19 +9,19 @@ namespace NVisitorTest.Api
     [TestFixture]
     public class DirectorWithSingleIncompleteVisitorTest
     {
-        public interface IMyNode {}
-        public class MyNodeO : IMyNode { }
-        public class MyNodeA : IMyNode { }
+        public interface IMyFamily {}
+        public class MyNodeO : IMyFamily { }
+        public class MyNodeA : IMyFamily { }
         public class MyNodeB : MyNodeA {}
 
-        public interface IMyVisitor 
-            : IVisitor<MyDir, IMyNode, MyNodeO>
+        public interface IMyVisitor
+            : IVisitor<IMyFamily, MyDir, MyNodeO>
         {
         }
 
-        public class MyDir : Director<MyDir, IMyNode>
+        public class MyDir : Director<IMyFamily, MyDir>
         {
-            public MyDir(IEnumerable<IVisitor<MyDir, IMyNode>> visitors) 
+            public MyDir(IEnumerable<IVisitor<IMyFamily, MyDir>> visitors) 
                 : base(visitors) { }
         }
 
@@ -31,7 +31,7 @@ namespace NVisitorTest.Api
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyNode node = new MyNodeO();
+            IMyFamily node = new MyNodeO();
             dir.Visit(node);
 
             mock.Verify(v => v.Visit(dir, It.Is<MyNodeO>(n => n == node)), Times.Once);
@@ -44,7 +44,7 @@ namespace NVisitorTest.Api
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyNode node = new MyNodeA();
+            IMyFamily node = new MyNodeA();
             dir.Visit(node);
         }
 
@@ -55,7 +55,7 @@ namespace NVisitorTest.Api
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyNode node = new MyNodeB();
+            IMyFamily node = new MyNodeB();
             dir.Visit(node);
         }
 
@@ -66,7 +66,7 @@ namespace NVisitorTest.Api
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyNode node = new Mock<IMyNode>().Object;
+            IMyFamily node = new Mock<IMyFamily>().Object;
             dir.Visit(node);
 
         }

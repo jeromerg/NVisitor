@@ -13,9 +13,9 @@ namespace NVisitorTest.Api
         public class NodeA : INode { }
         public class NodeB : NodeA {}
 
-        public class Dir : Director<Dir, INode>
+        public class Dir : Director<INode, Dir>
         {
-            public Dir() : base(new IVisitor<Dir, INode>[] { }) { }
+            public Dir() : base(new IVisitor<INode, Dir>[] { }) { }
         }
 
 

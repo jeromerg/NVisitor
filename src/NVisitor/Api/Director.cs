@@ -8,15 +8,16 @@ using NVisitor.Util.Topo;
 
 namespace NVisitor.Api
 {
-    public abstract class Director<TDir, TNod> : IDirector<TNod>
-        where TDir : IDirector<TNod>
+    public abstract class Director<TFamily, TDirector> : IDirector<TFamily>
+        where TDirector : IDirector<TFamily>
     {
 
-        private readonly Dictionary<Type, IVisitor<TDir, TNod>> mVisitorsByNodeType = new Dictionary<Type, IVisitor<TDir, TNod>>();
+        private readonly Dictionary<Type, IVisitor<TFamily, TDirector>> mVisitorsByNodeType
+            = new Dictionary<Type, IVisitor<TFamily, TDirector>>();
 
-        private readonly Dictionary<Type, Type> mNearestVisitorNodeTypeCache = new Dictionary<Type, Type>(); 
+        private readonly Dictionary<Type, Action<TFamily>> mVisitCacheByNodeType = new Dictionary<Type, Action<TFamily>>();
 
-        protected Director(IEnumerable<IVisitor<TDir, TNod>> visitors)
+        protected Director(IEnumerable<IVisitor<TFamily, TDirector>> visitors)
         {
             foreach (var visitor in visitors)
             {
@@ -31,7 +32,7 @@ namespace NVisitor.Api
 
                     Type concreteNodeType = implementedVisitorType.GetGenericArguments()[2];
 
-                    IVisitor<TDir, TNod> conflictingVisitor;
+                    IVisitor<TFamily, TDirector> conflictingVisitor;
                     if (mVisitorsByNodeType.TryGetValue(concreteNodeType, out conflictingVisitor))
                     {
                         string msg = string.Format("Two visitors apply for the same Node type: {0} and {1}",
@@ -44,42 +45,41 @@ namespace NVisitor.Api
             }
         }
 
-        public virtual void Visit([NotNull] TNod node)
+        public virtual void Visit([NotNull] TFamily node)
         {
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            Type nearestVisitorNodeType = FindNearestVisitorNodeType(node.GetType());
+            Action<TFamily> visitAction;
+            if (!mVisitCacheByNodeType.TryGetValue(node.GetType(), out visitAction))
+            {
+                Type nearestVisitorNodeType = FindNearestVisitorNodeType(node.GetType());
 
-            Type bestVisitorType =
-                typeof(IVisitor<,,>).MakeGenericType(typeof(TDir), typeof(TNod), nearestVisitorNodeType);
- 
-            IVisitor<TDir, TNod> bestVisitor = mVisitorsByNodeType[nearestVisitorNodeType];
-            
-            MethodInfo visitMethod = bestVisitorType.GetMethod("Visit");
+                Type bestVisitorType = typeof(IVisitor<,,>)
+                    .MakeGenericType(typeof(TFamily), typeof(TDirector), nearestVisitorNodeType);
 
-            visitMethod.Invoke(bestVisitor, new object[] {this, node});
+                IVisitor<TFamily, TDirector> bestVisitor = mVisitorsByNodeType[nearestVisitorNodeType];
+                MethodInfo visitMethod = bestVisitorType.GetMethod("Visit");
+                
+                visitAction = someNode => visitMethod.Invoke(bestVisitor, new object[] { this, someNode });
+            }
+
+            visitAction(node);
         }
 
         [NotNull]
         private Type FindNearestVisitorNodeType(Type nodeType)
         {
-            Type nearestVisitorNodeType;
-            
-            if (!mNearestVisitorNodeTypeCache.TryGetValue(nodeType, out nearestVisitorNodeType))
+            try
             {
-                try
-                {
-                    var typeTopology = new TypeTopology(nodeType);
-                    nearestVisitorNodeType = typeTopology
-                        .ResolveBestUnambiguousTargetType(new HashSet<Type>(mVisitorsByNodeType.Keys));
-                }
-                catch (TargetTypeNotResolvedException e)
-                {                    
-                    throw new VisitorNotFoundException(e);
-                }
+                var typeTopology = new TypeTopology(nodeType);
+                return typeTopology
+                    .ResolveBestUnambiguousTargetType(new HashSet<Type>(mVisitorsByNodeType.Keys));
             }
-            return nearestVisitorNodeType;
+            catch (TargetTypeNotResolvedException e)
+            {                    
+                throw new VisitorNotFoundException(e);
+            }
         }
     }
 }

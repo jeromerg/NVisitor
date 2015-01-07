@@ -3,8 +3,8 @@ using NVisitor.Util.Quality;
 
 namespace NVisitor.Api
 {
-    public interface IDirector<in TNodeBase> : IDirector
+    public interface IDirector<in TFamily> : IDirector
     {
-        void Visit([NotNull] TNodeBase node);
+        void Visit([NotNull] TFamily node);
     }
 }

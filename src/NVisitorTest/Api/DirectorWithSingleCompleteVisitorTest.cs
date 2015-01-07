@@ -9,22 +9,22 @@ namespace NVisitorTest.Api
     [TestFixture]
     public class DirectorWithSingleCompleteVisitorTest
     {
-        public interface IMyNode {}
-        public class MyNodeO : IMyNode { }
-        public class MyNodeA : IMyNode { }
+        public interface IMyFamily {}
+        public class MyNodeO : IMyFamily { }
+        public class MyNodeA : IMyFamily { }
         public class MyNodeB : MyNodeA {}
 
-        public interface IMyVisitor 
-            : IVisitor<MyDir, IMyNode, IMyNode>
-            , IVisitor<MyDir, IMyNode, MyNodeO>
-            , IVisitor<MyDir, IMyNode, MyNodeA>
-            , IVisitor<MyDir, IMyNode, MyNodeB>
+        public interface IMyVisitor
+            : IVisitor<IMyFamily, MyDir, IMyFamily>
+            , IVisitor<IMyFamily, MyDir, MyNodeO>
+            , IVisitor<IMyFamily, MyDir, MyNodeA>
+            , IVisitor<IMyFamily, MyDir, MyNodeB>
         {
         }
 
-        public class MyDir : Director<MyDir, IMyNode>
+        public class MyDir : Director<IMyFamily, MyDir>
         {
-            public MyDir(IEnumerable<IVisitor<MyDir, IMyNode>> visitors) 
+            public MyDir(IEnumerable<IVisitor<IMyFamily, MyDir>> visitors) 
                 : base(visitors) { }
         }
 
@@ -34,13 +34,13 @@ namespace NVisitorTest.Api
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyNode node = new MyNodeO();
+            IMyFamily node = new MyNodeO();
             dir.Visit(node);
 
             mock.Verify(v => v.Visit(dir, It.Is<MyNodeO>(n => n == node)), Times.Once);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
-            mock.Verify(v => v.Visit(dir, It.IsAny<IMyNode>()), Times.Never);
+            mock.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
         }
 
         [Test]
@@ -49,13 +49,13 @@ namespace NVisitorTest.Api
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyNode node = new MyNodeA();
+            IMyFamily node = new MyNodeA();
             dir.Visit(node);
 
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.Is<MyNodeA>(n => n == node)), Times.Once);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
-            mock.Verify(v => v.Visit(dir, It.IsAny<IMyNode>()), Times.Never);
+            mock.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
         }
 
         [Test]
@@ -64,13 +64,13 @@ namespace NVisitorTest.Api
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyNode node = new MyNodeB();
+            IMyFamily node = new MyNodeB();
             dir.Visit(node);
 
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.Is<MyNodeB>(n => n == node)), Times.Once);
-            mock.Verify(v => v.Visit(dir, It.IsAny<IMyNode>()), Times.Never);
+            mock.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
         }
 
         [Test]
@@ -79,13 +79,13 @@ namespace NVisitorTest.Api
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyNode node = new Mock<IMyNode>().Object;
+            IMyFamily node = new Mock<IMyFamily>().Object;
             dir.Visit(node);
 
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
-            mock.Verify(v => v.Visit(dir, It.Is<IMyNode>(n => n == node)), Times.Once);
+            mock.Verify(v => v.Visit(dir, It.Is<IMyFamily>(n => n == node)), Times.Once);
         }
     }
 }
