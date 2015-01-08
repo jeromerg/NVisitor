@@ -83,9 +83,9 @@ class Visitor2
 }
 ```
 
-That's the point why *NVisitor* is so powerful! You can place the visitors into multiple classes at multiple locations, allowing you to extend the class family (`INode` family) and provide visitors for any new types.
+That's the point why *NVisitor* is so powerful! You can place the visitors into multiple classes at multiple locations, allowing you to extend the class family (`INode` family) and update the algorithms to support the new node types.
 
-Remark: the classes implementing the visitor-methods should remain stateless. During the visit, you store the visit-state into the director. As a result, you can use singleton as visitor-collections.
+Remark: the classes implementing the visitor-methods should remain stateless. During the visit, you must store the visit-state in the director. 
 
 ### Configure and visit!
 
