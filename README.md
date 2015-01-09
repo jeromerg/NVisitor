@@ -51,8 +51,8 @@ You can implement them in a single class:
 
 ```C# 
 class VisitorCollection
-    : IVisitor<INode, DumpTxtDirector, NodeA>   // visitor for nodes of type NodeA of subclass
-    , IVisitor<INode, DumpTxtDirector, NodeB>   // visitor for nodes of type NodeB of subclass
+    : IVisitor<INode, DumpTxtDirector, NodeA>   // visitor for nodes of type NodeA or subclass
+    , IVisitor<INode, DumpTxtDirector, NodeB>   // visitor for nodes of type NodeB or subclass
 {        
     void Visit(DumpTxtDirector director, NodeA n) {
         director.StringBuilder.AppendLine("NodeA: " + n); // visit logic for NodeA
