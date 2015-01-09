@@ -28,7 +28,7 @@ Now, you need to implement several algorithms that apply to this class family.
 For each algorithm that you need, you declare a director. A director is a class that: 
 
 - Identifies the algorithm
-- Configures the visitor set
+- Configures the set of visitors, that visit the nodes
 - Stores the visit-state while visiting the nodes
 
 Example:
