@@ -20,7 +20,7 @@ Usage
 
 You can have a look at the unit test located in the visual studio solution, in order to get an insight on how to use the library.
 
-Let's say, you have a class family of nodes. Each class in the family implements the `INode` interface, used as marker. 
+Let's say, you have a class family of nodes. Each class in the family implements the `INode` interface. 
 Now, you need to implement several algorithms that apply to this class family.
 
 ### Declare a director
