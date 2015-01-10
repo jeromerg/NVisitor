@@ -40,12 +40,20 @@
     <Compile Include="Api\IVisitor.cs" />
     <Compile Include="Api\Marker\IVisitor.cs" />
     <Compile Include="Api\VisitorNotFoundException.cs" />
+    <Compile Include="Properties\GlobalAssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Quality\ResharperAnnotations.cs" />
     <Compile Include="Util\Topo\TargetTypeInfo.cs" />
     <Compile Include="Util\Topo\TargetTypeNotResolvedException.cs" />
     <Compile Include="Util\Topo\TargetTypeStatus.cs" />
     <Compile Include="Util\Topo\TypeTopology.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Version\src\NGitVersion\NGitVersion.csproj">
+      <Project>{badb59fb-1a14-42af-b314-152c4787f437}</Project>
+      <Name>NGitVersion</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
