@@ -10,6 +10,12 @@ To have an overview of the problem solved by *NVisitor*, please look at the blog
 Installation
 ------------
 
+### Via nuGet
+
+Install the following *NuGet* package : [https://www.nuget.org/packages/NVisitor](https://www.nuget.org/packages/NVisitor).
+Remark: the NuGet package only contains the `NVisitor.dll` assembly.
+
+### Via GitHub
 - Clone locally this github repository
 - Add a reference to the `NVisitor` library in your custom project
     - Either reference the project `NVisitor` itself in your custom .Net project
