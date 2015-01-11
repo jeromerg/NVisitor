@@ -16,6 +16,9 @@ bld/
 [Bb]in/
 [Oo]bj/
 
+# Nuget results
+*.nupkg
+
 # Roslyn cache directories
 *.ide/
 
