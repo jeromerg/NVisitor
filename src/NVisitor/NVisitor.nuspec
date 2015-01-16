@@ -17,7 +17,7 @@
   </metadata>
   
   <files>
-    <!--<file src="..\..\SomeRoot\**\*.*" target="" />-->
+    <file target='readme.txt' src='readme-for-nuget.txt' />
   </files>
   
 </package>
