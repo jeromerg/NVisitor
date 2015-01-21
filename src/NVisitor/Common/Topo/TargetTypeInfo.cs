@@ -1,4 +1,4 @@
-﻿namespace NVisitor.Util.Topo
+﻿namespace NVisitor.Common.Topo
 {
     public class TargetTypeInfo
     {

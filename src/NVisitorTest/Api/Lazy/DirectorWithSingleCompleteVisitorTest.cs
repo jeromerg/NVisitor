@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
-using NVisitor.Api;
-using NVisitor.Api.Marker;
+using NVisitor.Api.Lazy;
 
-namespace NVisitorTest.Api
+namespace NVisitorTest.Api.Lazy
 {
     [TestFixture]
-    public class DirectorWithSingleCompleteVisitorTest
+    public class LazyDirectorWithSingleCompleteVisitorTest
     {
         public interface IMyFamily {}
         public class MyNodeO : IMyFamily { }
@@ -15,16 +14,16 @@ namespace NVisitorTest.Api
         public class MyNodeB : MyNodeA {}
 
         public interface IMyVisitor
-            : IVisitor<IMyFamily, MyDir, IMyFamily>
-            , IVisitor<IMyFamily, MyDir, MyNodeO>
-            , IVisitor<IMyFamily, MyDir, MyNodeA>
-            , IVisitor<IMyFamily, MyDir, MyNodeB>
+            : ILazyVisitor<IMyFamily, MyDir, IMyFamily>
+            , ILazyVisitor<IMyFamily, MyDir, MyNodeO>
+            , ILazyVisitor<IMyFamily, MyDir, MyNodeA>
+            , ILazyVisitor<IMyFamily, MyDir, MyNodeB>
         {
         }
 
-        public class MyDir : Director<IMyFamily, MyDir>
+        public class MyDir : LazyDirector<IMyFamily, MyDir>
         {
-            public MyDir(IEnumerable<IVisitor<IMyFamily, MyDir>> visitors) 
+            public MyDir(IEnumerable<ILazyVisitorClass<IMyFamily, MyDir>> visitors) 
                 : base(visitors) { }
         }
 

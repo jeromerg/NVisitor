@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Text;
-using NVisitor.Util.Topo;
+using NVisitor.Common.Topo;
 
 namespace NVisitor.Api
 {

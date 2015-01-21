@@ -43,11 +43,18 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\DirectorWithConflictingVisitor.cs" />
-    <Compile Include="Api\DirectorWithTwoCompleteVisitorsTest.cs" />
-    <Compile Include="Api\DirectorWithSingleIncompleteVisitorTest.cs" />
-    <Compile Include="Api\DirectorWithSingleCompleteVisitorTest.cs" />
-    <Compile Include="Api\DirectorWithoutVisitorTest.cs" />
+    <Compile Include="Api\Batch\DirectorWithConflictingVisitor.cs" />
+    <Compile Include="Api\Batch\DirectorWithTwoCompleteVisitorsTest.cs" />
+    <Compile Include="Api\Batch\DirectorWithSingleIncompleteVisitorTest.cs" />
+    <Compile Include="Api\Batch\DirectorWithSingleCompleteVisitorTest.cs" />
+    <Compile Include="Api\Batch\DirectorWithoutVisitorTest.cs" />
+    <Compile Include="Api\Batch\DemoTest.cs" />
+    <Compile Include="Api\Lazy\DirectorWithConflictingVisitor.cs" />
+    <Compile Include="Api\Lazy\DirectorWithoutVisitorTest.cs" />
+    <Compile Include="Api\Lazy\DirectorWithSingleCompleteVisitorTest.cs" />
+    <Compile Include="Api\Lazy\DirectorWithSingleIncompleteVisitorTest.cs" />
+    <Compile Include="Api\Lazy\DirectorWithTwoCompleteVisitorsTest.cs" />
+    <Compile Include="Api\Lazy\DemoTest.cs" />
     <Compile Include="Util\Topo\TypeTopologyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

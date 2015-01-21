@@ -2,12 +2,12 @@
 using Moq;
 using NUnit.Framework;
 using NVisitor.Api;
-using NVisitor.Api.Marker;
+using NVisitor.Api.Lazy;
 
-namespace NVisitorTest.Api
+namespace NVisitorTest.Api.Lazy
 {
     [TestFixture]
-    public class DirectorWithConflictingVisitor
+    public class LazyDirectorWithConflictingVisitor
     {
         public interface IMyFamily {}
         public interface IMyFamily1 : IMyFamily { }
@@ -15,20 +15,20 @@ namespace NVisitorTest.Api
         public class MyNode : IMyFamily1, IMyFamily2 { }
 
         public interface IConflictingVisitor
-            : IVisitor<IMyFamily, MyDir, IMyFamily>
-            , IVisitor<IMyFamily, MyDir, IMyFamily1>
-            , IVisitor<IMyFamily, MyDir, IMyFamily2>
+            : ILazyVisitor<IMyFamily, MyDir, IMyFamily>
+            , ILazyVisitor<IMyFamily, MyDir, IMyFamily1>
+            , ILazyVisitor<IMyFamily, MyDir, IMyFamily2>
         {
         }
 
         public interface ISolvingVisitor
-            : IVisitor<IMyFamily, MyDir, MyNode>
+            : ILazyVisitor<IMyFamily, MyDir, MyNode>
         {
         }
 
-        public class MyDir : Director<IMyFamily, MyDir>
+        public class MyDir : LazyDirector<IMyFamily, MyDir>
         {
-            public MyDir(IEnumerable<IVisitor<IMyFamily, MyDir>> visitors) 
+            public MyDir(IEnumerable<ILazyVisitorClass<IMyFamily, MyDir>> visitors) 
                 : base(visitors) { }
         }
 
@@ -48,7 +48,7 @@ namespace NVisitorTest.Api
         {
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
             var mockSolvingVisitor = new Mock<ISolvingVisitor>();
-            var dir = new MyDir(new IVisitor<IMyFamily, MyDir>[] { mockConflictingVisitor.Object, mockSolvingVisitor.Object });
+            var dir = new MyDir(new ILazyVisitorClass<IMyFamily, MyDir>[] { mockConflictingVisitor.Object, mockSolvingVisitor.Object });
 
             IMyFamily node = new MyNode();
             dir.Visit(node);

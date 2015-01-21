@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace NVisitor.Util.Topo
+namespace NVisitor.Common.Topo
 {
     internal class TargetTypeNotResolvedException : Exception
     {

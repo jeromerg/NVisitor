@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
 using NVisitor.Api;
-using NVisitor.Api.Marker;
+using NVisitor.Api.Lazy;
 
-namespace NVisitorTest.Api
+namespace NVisitorTest.Api.Lazy
 {
     [TestFixture]
-    public class DirectorWithoutVisitorTest
+    public class LazyDirectorWithoutVisitorTest
     {
         public interface INode {}
         public class NodeO : INode { }
         public class NodeA : INode { }
         public class NodeB : NodeA {}
 
-        public class Dir : Director<INode, Dir>
+        public class Dir : LazyDirector<INode, Dir>
         {
-            public Dir() : base(new IVisitor<INode, Dir>[] { }) { }
+            public Dir() : base(new ILazyVisitorClass<INode, Dir>[] { }) { }
         }
 
 

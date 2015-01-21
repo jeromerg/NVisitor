@@ -2,9 +2,9 @@
 using Moq;
 using NUnit.Framework;
 using NVisitor.Api;
-using NVisitor.Api.Marker;
+using NVisitor.Api.Batch;
 
-namespace NVisitorTest.Api
+namespace NVisitorTest.Api.Batch
 {
     [TestFixture]
     public class DirectorWithSingleIncompleteVisitorTest
@@ -21,7 +21,7 @@ namespace NVisitorTest.Api
 
         public class MyDir : Director<IMyFamily, MyDir>
         {
-            public MyDir(IEnumerable<IVisitor<IMyFamily, MyDir>> visitors) 
+            public MyDir(IEnumerable<IVisitorClass<IMyFamily, MyDir>> visitors) 
                 : base(visitors) { }
         }
 

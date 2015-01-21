@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NVisitor.Util.Quality;
 
-namespace NVisitor.Util.Topo
+namespace NVisitor.Common.Topo
 {
     public class TypeTopology
     {
@@ -18,7 +18,7 @@ namespace NVisitor.Util.Topo
         }
 
         /// <exception cref="TargetTypeNotResolvedException"></exception>
-        [CanBeNull]
+        [NotNull]
         public Type ResolveBestUnambiguousTargetType(HashSet<Type> targetCandidates)
         {
             var excludedTypes = new List<TargetTypeInfo>();

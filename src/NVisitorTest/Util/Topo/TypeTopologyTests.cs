@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using NVisitor.Util.Topo;
+using NVisitor.Common.Topo;
 
 namespace NVisitorTest.Util.Topo
 {

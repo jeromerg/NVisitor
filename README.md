@@ -41,7 +41,7 @@ Example:
 ```C# 
 class DumpDirector : Director<INode, DumpDirector> {
     
-    public DumpDirector(IVisitor<INode, DumpDirector>[] visitors) 
+    public DumpDirector(IVisitorClass<INode, DumpDirector>[] visitors) 
         : base(visitors) { }
     
     // visit state 
@@ -123,16 +123,17 @@ For example with the IoC-Container *Autofac*, you add the directors and visitors
 var builder = new ContainerBuilder();
 Assembly executingAssembly = Assembly.GetExecutingAssembly();
 
-// add directors to container
+// register visitor's directors. 
 builder.RegisterAssemblyTypes(executingAssembly)
-    .Where(t => typeof (IDirector).IsAssignableFrom(t))
-    .AsClosedTypesOf(typeof (IDirector<>))
-    .InstancePerDependency();
+	.Where(t => typeof (IDirectorMarker).IsAssignableFrom(t))
+	.AsImplementedInterfaces()
+	.InstancePerDependency(); // Directors are stateful
 
-// add visitors to container
+// register visitors. 
 builder.RegisterAssemblyTypes(executingAssembly)
-    .Where(t => typeof (IVisitor).IsAssignableFrom(t))
-    .AsClosedTypesOf(typeof (IVisitor<,>));
+	.Where(t => typeof (IVisitorMarker).IsAssignableFrom(t))
+	.AsImplementedInterfaces()
+	.SingleInstance(); // Visitors are stateless
 
 IContainer container = builder.Build();
 ```

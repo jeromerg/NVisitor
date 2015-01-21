@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
-using NVisitor.Api;
-using NVisitor.Api.Marker;
+using NVisitor.Api.Batch;
 
-namespace NVisitorTest.Api
+namespace NVisitorTest.Api.Batch
 {
     [TestFixture]
     public class DirectorWithTwoCompleteVisitorsTest
@@ -28,7 +27,7 @@ namespace NVisitorTest.Api
 
         public class MyDir : Director<IMyFamily, MyDir>
         {
-            public MyDir(IEnumerable<IVisitor<IMyFamily, MyDir>> visitors)
+            public MyDir(IEnumerable<IVisitorClass<IMyFamily, MyDir>> visitors)
                 : base(visitors) { }
         }
 
@@ -37,7 +36,7 @@ namespace NVisitorTest.Api
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitor<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new IVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
 
             IMyFamily node = new MyNodeO();
             dir.Visit(node);
@@ -54,7 +53,7 @@ namespace NVisitorTest.Api
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitor<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new IVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
 
             IMyFamily node = new Mock<IMyFamily>().Object;
             dir.Visit(node);
@@ -71,7 +70,7 @@ namespace NVisitorTest.Api
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitor<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new IVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
 
             IMyFamily node = new MyNodeA();
             dir.Visit(node);
@@ -88,7 +87,7 @@ namespace NVisitorTest.Api
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitor<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new IVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
 
             IMyFamily node = new MyNodeB();
             dir.Visit(node);
