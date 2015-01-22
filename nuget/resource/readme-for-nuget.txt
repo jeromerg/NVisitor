@@ -10,10 +10,10 @@ NVisitor enables
 Usage
 -----
 
-Look at the demo unit tests located in: 
+Look at the demo unit tests: 
 
-    /src/NVisitorTest/Api/Demo/BatchVisitorDemo.cs 
-    /src/NVisitorTest/Api/Demo/LazyVisitorDemo.cs 
+    http://github.com/jeromerg/NVisitor/blob/master/src/NVisitorTest/Api/Demo/BatchVisitorDemo.cs
+    http://github.com/jeromerg/NVisitor/blob/master/src/NVisitorTest/Api/Demo/LazyVisitorDemo.cs
 
 
 Links
