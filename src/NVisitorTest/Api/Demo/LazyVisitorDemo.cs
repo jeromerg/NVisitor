@@ -7,12 +7,12 @@ using NVisitor.Api.Lazy;
 namespace NVisitorTest.Api.Demo.LazyVisitor
 {
     //
-    // THIS FILE PRESENTS THE LAZY FEATURE INTRODUCED BY NVisitor
+    // THIS FILE PRESENTS THE LAZY VISIT FEATURE INTRODUCED BY NVisitor
     // 
 
-    // ----------------------------------------------------------------------
-    // 1. You have a family of two nodes as following:
-    // ----------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // 1. Say, you have a node family following the composite pattern and two node types NodeA and NodeB:
+    // ---------------------------------------------------------------------------------------------
 
     public class NodeFamily : List<NodeFamily>
     {
