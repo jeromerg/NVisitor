@@ -7,7 +7,8 @@ Lightweight Framework to develop modular extendable visitors
 
 To have an overview of the initial problem solved by *NVisitor*, please look at the blog entry [nvisitor-released](https://jeromerg.github.io/blog/2015/01/06/nvisitor-released/).
 
-*NVisitor* has been extended, in order to allow lazy visitors: Lazy visitors can make a break in the middle of the visit, a tee-break or coffee-break for example. During this pause, the calling procedure can process the intermediate state and wake up the visitors after. This optimization is important if you have limited time or memory resources and you can process the intermediate result. The implementation is based on the C# enumerator pattern and `yield` keyword.
+UPDATE
+*NVisitor* has been extended to support lazy visitors: Lazy visitors can make a break in the middle of the visit, a tee-break or coffee-break for example. During this pause, the calling procedure can process the intermediate state and wake up the visitors after. This optimization is important if you have limited time or memory resources and you can process the intermediate result. The implementation is based on the C# enumerator pattern and `yield` keyword.
 
 Installation
 ------------
