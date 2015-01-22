@@ -33,8 +33,8 @@ namespace NGitVersion.Model
         public string Company { get { return "jeromerg"; } }
         public string Product { get { return "NVisitor"; } }
         public string Copyright { get { return "Apache License Version 2.0"; } }
-        public string Major { get { return "0"; } }
-        public string Minor { get { return "9"; } }
+        public string Major { get { return "1"; } }
+        public string Minor { get { return "0"; } }
         public string Build { get { return "0"; } }
 
         public string Revision { get { return mRevision.Value; } }
