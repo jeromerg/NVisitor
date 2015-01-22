@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using NUnit.Framework;
 using NVisitor.Api.Lazy;
 
@@ -34,13 +35,23 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
 
     public class FindLeavesDirector : LazyDirector<NodeFamily, FindLeavesDirector>
     {
+        private readonly StringBuilder mLog = new StringBuilder();
+
         public FindLeavesDirector(params ILazyVisitorClass<NodeFamily, FindLeavesDirector>[] visitors)
             : base(visitors)
         {
         }
 
-        // state
         public NodeFamily CurrentLeaf { get; set; }
+
+        public void Log(string format, params object[] args)
+        {
+            string line = string.Format(format, args);
+            Console.WriteLine(line);
+            mLog.AppendLine(line);
+        }
+
+        public override string ToString() { return mLog.ToString(); }
     }
 
     public class FindLeavesVisitors
@@ -49,7 +60,7 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
     {
         public IEnumerable<Pause> Visit(FindLeavesDirector director, NodeA node)
         {
-            Console.WriteLine("... visiting node {0} (NodeA's visitor is speaking)", node.Name);
+            director.Log("... visiting node {0} (NodeA's visitor is speaking)", node.Name);
 
             // if leaf, then pause the visit
             if (node.Count == 0)
@@ -66,7 +77,7 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
 
         public IEnumerable<Pause> Visit(FindLeavesDirector director, NodeB node)
         {
-            Console.WriteLine("... visiting node {0} (NodeB's visitor is speaking)", node.Name);
+            director.Log("... visiting node {0} (NodeB's visitor is speaking)", node.Name);
  
             if (node.Count == 0)
             {
@@ -102,39 +113,40 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
 
             var director = new FindLeavesDirector(new FindLeavesVisitors());
 
-            IEnumerable<Pause> pauses = director.Visit(root);
+            IEnumerable<Pause> visitPauses = director.Visit(root);
 
-            Console.WriteLine("Starting processing leaves:");
-            foreach (var pause in pauses)
+            director.Log("Starting processing leaves:");
+            foreach (var pause in visitPauses)
             {
-                Console.WriteLine("PROCESSING node " + director.CurrentLeaf.Name);
+                director.Log("PROCESSING node " + director.CurrentLeaf.Name);
             }
 
             // Result in console:
-            // > Starting processing leaves:
-            // > ... visiting node 1 (NodeA's visitor is speaking)
-            // > ... visiting node 2 (NodeB's visitor is speaking)
-            // > ... visiting node 3 (NodeA's visitor is speaking)
-            // > PROCESSING node 3
-            // > ... visiting node 4 (NodeB's visitor is speaking)
-            // > PROCESSING node 4
-            // > ... visiting node 5 (NodeA's visitor is speaking)
-            // > PROCESSING node 5
+            Assert.AreEqual("Starting processing leaves:\r\n" +
+                            "... visiting node 1 (NodeA's visitor is speaking)\r\n" +
+                            "... visiting node 2 (NodeB's visitor is speaking)\r\n" +
+                            "... visiting node 3 (NodeA's visitor is speaking)\r\n" +
+                            "PROCESSING node 3\r\n" +
+                            "... visiting node 4 (NodeB's visitor is speaking)\r\n" +
+                            "PROCESSING node 4\r\n" +
+                            "... visiting node 5 (NodeA's visitor is speaking)\r\n" +
+"PROCESSING node 5\r\n", director.ToString());
+
         }
     }
 
     // ---------------------------------------------
-    // RESULT: as you see, the nodes are processed as soon as their 
-    // are encountered during the visit!! 
+    // RESULT: As you see, the nodes are processed as soon as their 
+    // are encountered during the visit.
     // 
     // With the LazyDirector implementation you have the same benefits 
     // as the default Director implementation (Batch implementation)
-    // but you also pause the visit of the tree to process the collected values so far. 
+    // You can additionally make the processing of the visit-result while the visit occurs.
     // It may be necessary in two cases:
     // - If the visit of the full tree is too expensive in time and you need to start
     //   its processing as soon as possible
-    // - If the memory footprint of the collected values during the visit is too big, 
+    // - If the memory footprint of the collected values during the visit is too large, 
     //   so that you can only process a few collected values at once. It can be combined
-    //   with a NodeFamily.Children IEnumerable collection, which avoid loading all nodes in memory!!!
+    //   with a NodeFamily.Children IEnumerable collection, to load nodes in memory one after the other.
 
 }

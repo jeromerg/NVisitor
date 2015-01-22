@@ -73,15 +73,16 @@ namespace NVisitorTest.Api.Demo.Batch
 
             dumpDirector.Visit(root);
 
-            Console.WriteLine(dumpDirector.StringBuilder.ToString());
+            string dump = dumpDirector.StringBuilder.ToString();
+            Console.WriteLine(dump);
 
             // Result in console:
-            // > NodeA visited
-            // > NodeB visited
-            // > NodeA visited
-            // > NodeB visited
-            // > NodeA visited
-            
+            Assert.AreEqual("NodeA visited\r\n" +
+                            "NodeB visited\r\n" +
+                            "NodeA visited\r\n" +
+                            "NodeB visited\r\n" +
+                            "NodeA visited\r\n", dump);
+
         }
     }
 
@@ -131,16 +132,16 @@ namespace NVisitorTest.Api.Demo.Batch
 
             dumpDirector.Visit(root);
 
-            Console.WriteLine(dumpDirector.StringBuilder.ToString());
+            string dump = dumpDirector.StringBuilder.ToString();
+            Console.WriteLine(dump);
 
             // Result in console:
-            // > NodeA visited
-            // > NodeC visited !!!!!!!!
-            // > NodeB visited
-            // > NodeA visited
-            // > NodeB visited
-            // > NodeA visited
-
+            Assert.AreEqual("NodeA visited\r\n" +
+                            "NodeC visited !!!!!!!!\r\n" +
+                            "NodeB visited\r\n" +
+                            "NodeA visited\r\n" +
+                            "NodeB visited\r\n" +
+                            "NodeA visited\r\n", dump);
         }
     }
 
@@ -169,16 +170,16 @@ namespace NVisitorTest.Api.Demo.Batch
 
             dumpDirector.Visit(root);
 
-            Console.WriteLine(dumpDirector.StringBuilder.ToString());
+            string dump = dumpDirector.StringBuilder.ToString();
+            Console.WriteLine(dump);
 
             // Result in console is the same:
-            // > NodeA visited
-            // > NodeC visited !!!!!!!!
-            // > NodeB visited
-            // > NodeA visited
-            // > NodeB visited
-            // > NodeA visited
-
+            Assert.AreEqual("NodeA visited\r\n" +
+                            "NodeC visited !!!!!!!!\r\n" +
+                            "NodeB visited\r\n" +
+                            "NodeA visited\r\n" +
+                            "NodeB visited\r\n" +
+                            "NodeA visited\r\n", dump);
         }
 
         // The IoC container scan the assemblies and injects automatically all found visitors into the Director
