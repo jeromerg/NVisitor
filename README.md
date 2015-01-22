@@ -57,14 +57,14 @@ You can implement them in a single class:
 
 ```C# 
 class VisitorCollection
-    : IVisitor<INode, DumpTxtDirector, NodeA>   // visitor for nodes of type NodeA or subclass
-    , IVisitor<INode, DumpTxtDirector, NodeB>   // visitor for nodes of type NodeB or subclass
+    : IVisitor<INode, DumpDirector, NodeA>   // visitor for nodes of type NodeA or subclass
+    , IVisitor<INode, DumpDirector, NodeB>   // visitor for nodes of type NodeB or subclass
 {        
-    void Visit(DumpTxtDirector director, NodeA n) {
+    void Visit(DumpDirector director, NodeA n) {
         director.StringBuilder.AppendLine("NodeA: " + n); // visit logic for NodeA
     }
 
-    void Visit(DumpTxtDirector director, NodeB n) {
+    void Visit(DumpDirector director, NodeB n) {
         director.StringBuilder.AppendLine("NodeB: " + n); // visit logic for NodeB
     }
 }
@@ -73,17 +73,17 @@ class VisitorCollection
 Or you can implement them in multiple classes:
 ```C# 
 class Visitor1
-    : IVisitor<INode, DumpTxtDirector, NodeA>
+    : IVisitor<INode, DumpDirector, NodeA>
 {        
-    void Visit(DumpTxtDirector director, NodeA n) {
+    void Visit(DumpDirector director, NodeA n) {
         director.StringBuilder.AppendLine("NodeA: " + n); // visit logic for NodeA
     }
 }
 
 class Visitor2
-    : IVisitor<INode, DumpTxtDirector, NodeB> 
+    : IVisitor<INode, DumpDirector, NodeB> 
 {        
-    void Visit(DumpTxtDirector director, NodeB n) {
+    void Visit(DumpDirector director, NodeB n) {
         director.StringBuilder.AppendLine("NodeB: " + n); // visit logic for NodeB
     }
 }
@@ -101,7 +101,7 @@ That's it. Now, you can configure and use the director to visit your nodes:
 void Main() {
 
     // Create a new director instance
-    var director = new DumpTxtDirector(new [] {
+    var director = new DumpDirector(new [] {
         new Visitor1(),  // list here all visitor collections
         new Visitor2()
     });    
