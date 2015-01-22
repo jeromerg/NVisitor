@@ -24,9 +24,9 @@ Remark: the NuGet package only contains the `NVisitor.dll` assembly.
 Usage
 -----
 
-You can have a look at the unit test located in the visual studio solution, in order to get an insight on how to use the library.
+You have a perfect starting-point at [/src/NVisitorTest/Api/Demo](https://github.com/jeromerg/NVisitor/tree/master/src/NVisitorTest/Api/Demo). The folder contains demo-tests illustrating the most releant features introduced by *NVisitor*.
 
-Let's say, you have a class family of nodes. Each class in the family implements the `INode` interface. 
+But to have a quick overview, let's say, you have a class family of nodes. Each class in the family implements the `INode` interface. 
 Now, you need to implement several algorithms that apply to this class family.
 
 ### Declare a director
