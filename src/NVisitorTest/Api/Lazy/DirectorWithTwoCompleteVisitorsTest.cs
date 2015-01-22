@@ -8,26 +8,26 @@ namespace NVisitorTest.Api.Lazy
     [TestFixture]
     public class LazyDirectorWithTwoCompleteVisitorsTest
     {
-        public interface IMyFamily { }
-        public class MyNodeO : IMyFamily { }
-        public class MyNodeA : IMyFamily { }
+        public interface INode { }
+        public class MyNodeO : INode { }
+        public class MyNodeA : INode { }
         public class MyNodeB : MyNodeA { }
 
         public interface IMyVisitor1
-            : ILazyVisitor<IMyFamily, MyDir, IMyFamily>
-            , ILazyVisitor<IMyFamily, MyDir, MyNodeO>
+            : ILazyVisitor<INode, MyDir, INode>
+            , ILazyVisitor<INode, MyDir, MyNodeO>
         {
         }
 
         public interface IMyVisitor2
-            : ILazyVisitor<IMyFamily, MyDir, MyNodeA>
-            , ILazyVisitor<IMyFamily, MyDir, MyNodeB>
+            : ILazyVisitor<INode, MyDir, MyNodeA>
+            , ILazyVisitor<INode, MyDir, MyNodeB>
         {
         }
 
-        public class MyDir : LazyDirector<IMyFamily, MyDir>
+        public class MyDir : LazyDirector<INode, MyDir>
         {
-            public MyDir(IEnumerable<ILazyVisitorClass<IMyFamily, MyDir>> visitors)
+            public MyDir(IEnumerable<ILazyVisitorClass<INode, MyDir>> visitors)
                 : base(visitors) { }
         }
 
@@ -36,13 +36,13 @@ namespace NVisitorTest.Api.Lazy
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new ILazyVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new ILazyVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
 
-            IMyFamily node = new MyNodeO();
+            INode node = new MyNodeO();
             dir.Visit(node);
 
             mock1.Verify(v => v.Visit(dir, It.Is<MyNodeO>(n => n == node)), Times.Once);
-            mock1.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
+            mock1.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
             
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
@@ -53,13 +53,13 @@ namespace NVisitorTest.Api.Lazy
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new ILazyVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new ILazyVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
 
-            IMyFamily node = new Mock<IMyFamily>().Object;
+            INode node = new Mock<INode>().Object;
             dir.Visit(node);
 
             mock1.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
-            mock1.Verify(v => v.Visit(dir, It.Is<IMyFamily>(n => n == node)), Times.Once);
+            mock1.Verify(v => v.Visit(dir, It.Is<INode>(n => n == node)), Times.Once);
             
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
@@ -70,13 +70,13 @@ namespace NVisitorTest.Api.Lazy
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new ILazyVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new ILazyVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
 
-            IMyFamily node = new MyNodeA();
+            INode node = new MyNodeA();
             dir.Visit(node);
 
             mock1.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
-            mock1.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
+            mock1.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
             
             mock2.Verify(v => v.Visit(dir, It.Is<MyNodeA>(n => n == node)), Times.Once);
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
@@ -87,13 +87,13 @@ namespace NVisitorTest.Api.Lazy
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new ILazyVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new ILazyVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
 
-            IMyFamily node = new MyNodeB();
+            INode node = new MyNodeB();
             dir.Visit(node);
 
             mock1.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
-            mock1.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
+            mock1.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
             
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock2.Verify(v => v.Visit(dir, It.Is<MyNodeB>(n => n == node)), Times.Once);

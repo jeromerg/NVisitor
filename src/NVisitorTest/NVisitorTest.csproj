@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -48,13 +51,13 @@
     <Compile Include="Api\Batch\DirectorWithSingleIncompleteVisitorTest.cs" />
     <Compile Include="Api\Batch\DirectorWithSingleCompleteVisitorTest.cs" />
     <Compile Include="Api\Batch\DirectorWithoutVisitorTest.cs" />
-    <Compile Include="Api\Batch\DemoTest.cs" />
+    <Compile Include="Api\Demo\BatchVisitorDemo.cs" />
     <Compile Include="Api\Lazy\DirectorWithConflictingVisitor.cs" />
     <Compile Include="Api\Lazy\DirectorWithoutVisitorTest.cs" />
     <Compile Include="Api\Lazy\DirectorWithSingleCompleteVisitorTest.cs" />
     <Compile Include="Api\Lazy\DirectorWithSingleIncompleteVisitorTest.cs" />
     <Compile Include="Api\Lazy\DirectorWithTwoCompleteVisitorsTest.cs" />
-    <Compile Include="Api\Lazy\DemoTest.cs" />
+    <Compile Include="Api\Demo\LazyVisitorDemo.cs" />
     <Compile Include="Util\Topo\TypeTopologyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

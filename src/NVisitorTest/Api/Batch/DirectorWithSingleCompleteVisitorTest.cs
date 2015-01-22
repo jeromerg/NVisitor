@@ -8,22 +8,22 @@ namespace NVisitorTest.Api.Batch
     [TestFixture]
     public class DirectorWithSingleCompleteVisitorTest
     {
-        public interface IMyFamily {}
-        public class MyNodeO : IMyFamily { }
-        public class MyNodeA : IMyFamily { }
+        public interface INode {}
+        public class MyNodeO : INode { }
+        public class MyNodeA : INode { }
         public class MyNodeB : MyNodeA {}
 
         public interface IMyVisitor
-            : IVisitor<IMyFamily, MyDir, IMyFamily>
-            , IVisitor<IMyFamily, MyDir, MyNodeO>
-            , IVisitor<IMyFamily, MyDir, MyNodeA>
-            , IVisitor<IMyFamily, MyDir, MyNodeB>
+            : IVisitor<INode, MyDir, INode>
+            , IVisitor<INode, MyDir, MyNodeO>
+            , IVisitor<INode, MyDir, MyNodeA>
+            , IVisitor<INode, MyDir, MyNodeB>
         {
         }
 
-        public class MyDir : Director<IMyFamily, MyDir>
+        public class MyDir : Director<INode, MyDir>
         {
-            public MyDir(IEnumerable<IVisitorClass<IMyFamily, MyDir>> visitors) 
+            public MyDir(IEnumerable<IVisitorClass<INode, MyDir>> visitors) 
                 : base(visitors) { }
         }
 
@@ -33,13 +33,13 @@ namespace NVisitorTest.Api.Batch
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyFamily node = new MyNodeO();
+            INode node = new MyNodeO();
             dir.Visit(node);
 
             mock.Verify(v => v.Visit(dir, It.Is<MyNodeO>(n => n == node)), Times.Once);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
-            mock.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
+            mock.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
         }
 
         [Test]
@@ -48,13 +48,13 @@ namespace NVisitorTest.Api.Batch
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyFamily node = new MyNodeA();
+            INode node = new MyNodeA();
             dir.Visit(node);
 
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.Is<MyNodeA>(n => n == node)), Times.Once);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
-            mock.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
+            mock.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
         }
 
         [Test]
@@ -63,13 +63,13 @@ namespace NVisitorTest.Api.Batch
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyFamily node = new MyNodeB();
+            INode node = new MyNodeB();
             dir.Visit(node);
 
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.Is<MyNodeB>(n => n == node)), Times.Once);
-            mock.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
+            mock.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
         }
 
         [Test]
@@ -78,13 +78,13 @@ namespace NVisitorTest.Api.Batch
             var mock = new Mock<IMyVisitor>();
             var dir = new MyDir(new[] { mock.Object });
 
-            IMyFamily node = new Mock<IMyFamily>().Object;
+            INode node = new Mock<INode>().Object;
             dir.Visit(node);
 
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
-            mock.Verify(v => v.Visit(dir, It.Is<IMyFamily>(n => n == node)), Times.Once);
+            mock.Verify(v => v.Visit(dir, It.Is<INode>(n => n == node)), Times.Once);
         }
     }
 }

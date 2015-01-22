@@ -8,26 +8,26 @@ namespace NVisitorTest.Api.Batch
     [TestFixture]
     public class DirectorWithTwoCompleteVisitorsTest
     {
-        public interface IMyFamily { }
-        public class MyNodeO : IMyFamily { }
-        public class MyNodeA : IMyFamily { }
+        public interface INode { }
+        public class MyNodeO : INode { }
+        public class MyNodeA : INode { }
         public class MyNodeB : MyNodeA { }
 
         public interface IMyVisitor1
-            : IVisitor<IMyFamily, MyDir, IMyFamily>
-            , IVisitor<IMyFamily, MyDir, MyNodeO>
+            : IVisitor<INode, MyDir, INode>
+            , IVisitor<INode, MyDir, MyNodeO>
         {
         }
 
         public interface IMyVisitor2
-            : IVisitor<IMyFamily, MyDir, MyNodeA>
-            , IVisitor<IMyFamily, MyDir, MyNodeB>
+            : IVisitor<INode, MyDir, MyNodeA>
+            , IVisitor<INode, MyDir, MyNodeB>
         {
         }
 
-        public class MyDir : Director<IMyFamily, MyDir>
+        public class MyDir : Director<INode, MyDir>
         {
-            public MyDir(IEnumerable<IVisitorClass<IMyFamily, MyDir>> visitors)
+            public MyDir(IEnumerable<IVisitorClass<INode, MyDir>> visitors)
                 : base(visitors) { }
         }
 
@@ -36,13 +36,13 @@ namespace NVisitorTest.Api.Batch
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new IVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
 
-            IMyFamily node = new MyNodeO();
+            INode node = new MyNodeO();
             dir.Visit(node);
 
             mock1.Verify(v => v.Visit(dir, It.Is<MyNodeO>(n => n == node)), Times.Once);
-            mock1.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
+            mock1.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
             
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
@@ -53,13 +53,13 @@ namespace NVisitorTest.Api.Batch
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new IVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
 
-            IMyFamily node = new Mock<IMyFamily>().Object;
+            INode node = new Mock<INode>().Object;
             dir.Visit(node);
 
             mock1.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
-            mock1.Verify(v => v.Visit(dir, It.Is<IMyFamily>(n => n == node)), Times.Once);
+            mock1.Verify(v => v.Visit(dir, It.Is<INode>(n => n == node)), Times.Once);
             
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
@@ -70,13 +70,13 @@ namespace NVisitorTest.Api.Batch
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new IVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
 
-            IMyFamily node = new MyNodeA();
+            INode node = new MyNodeA();
             dir.Visit(node);
 
             mock1.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
-            mock1.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
+            mock1.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
             
             mock2.Verify(v => v.Visit(dir, It.Is<MyNodeA>(n => n == node)), Times.Once);
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
@@ -87,13 +87,13 @@ namespace NVisitorTest.Api.Batch
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitorClass<IMyFamily, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new MyDir(new IVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
 
-            IMyFamily node = new MyNodeB();
+            INode node = new MyNodeB();
             dir.Visit(node);
 
             mock1.Verify(v => v.Visit(dir, It.IsAny<MyNodeO>()), Times.Never);
-            mock1.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
+            mock1.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
             
             mock2.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock2.Verify(v => v.Visit(dir, It.Is<MyNodeB>(n => n == node)), Times.Once);

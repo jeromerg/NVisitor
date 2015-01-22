@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using NVisitor.Api.Batch;
 
 namespace NVisitor.Api.Lazy
@@ -13,6 +15,6 @@ namespace NVisitor.Api.Lazy
         /// <summary>The visit method to implement</summary>
         /// <param name="director">You can read and update state of the director during the visit</param>
         /// <param name="node">The node to visit</param>
-        void Visit(TDirector director, TNode node);
+        IEnumerable<Pause> Visit(TDirector director, TNode node);
     }
 }

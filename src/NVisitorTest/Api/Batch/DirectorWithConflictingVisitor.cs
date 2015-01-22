@@ -9,26 +9,26 @@ namespace NVisitorTest.Api.Batch
     [TestFixture]
     public class DirectorWithConflictingVisitor
     {
-        public interface IMyFamily {}
-        public interface IMyFamily1 : IMyFamily { }
-        public interface IMyFamily2 : IMyFamily { }
-        public class MyNode : IMyFamily1, IMyFamily2 { }
+        public interface INode {}
+        public interface INode1 : INode { }
+        public interface INode2 : INode { }
+        public class MyNode : INode1, INode2 { }
 
         public interface IConflictingVisitor
-            : IVisitor<IMyFamily, MyDir, IMyFamily>
-            , IVisitor<IMyFamily, MyDir, IMyFamily1>
-            , IVisitor<IMyFamily, MyDir, IMyFamily2>
+            : IVisitor<INode, MyDir, INode>
+            , IVisitor<INode, MyDir, INode1>
+            , IVisitor<INode, MyDir, INode2>
         {
         }
 
         public interface ISolvingVisitor
-            : IVisitor<IMyFamily, MyDir, MyNode>
+            : IVisitor<INode, MyDir, MyNode>
         {
         }
 
-        public class MyDir : Director<IMyFamily, MyDir>
+        public class MyDir : Director<INode, MyDir>
         {
-            public MyDir(IEnumerable<IVisitorClass<IMyFamily, MyDir>> visitors) 
+            public MyDir(IEnumerable<IVisitorClass<INode, MyDir>> visitors) 
                 : base(visitors) { }
         }
 
@@ -39,7 +39,7 @@ namespace NVisitorTest.Api.Batch
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
             var dir = new MyDir(new [] { mockConflictingVisitor.Object});
 
-            IMyFamily node = new MyNode();
+            INode node = new MyNode();
             dir.Visit(node);
         }
 
@@ -48,14 +48,14 @@ namespace NVisitorTest.Api.Batch
         {
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
             var mockSolvingVisitor = new Mock<ISolvingVisitor>();
-            var dir = new MyDir(new IVisitorClass<IMyFamily, MyDir>[] { mockConflictingVisitor.Object, mockSolvingVisitor.Object });
+            var dir = new MyDir(new IVisitorClass<INode, MyDir>[] { mockConflictingVisitor.Object, mockSolvingVisitor.Object });
 
-            IMyFamily node = new MyNode();
+            INode node = new MyNode();
             dir.Visit(node);
 
-            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
-            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<IMyFamily1>()), Times.Never);
-            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<IMyFamily2>()), Times.Never);
+            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
+            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<INode1>()), Times.Never);
+            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<INode2>()), Times.Never);
             mockSolvingVisitor.Verify(v => v.Visit(dir, It.Is<MyNode>(n => n == node)), Times.Once);
         }
 

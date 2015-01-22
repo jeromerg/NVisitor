@@ -9,26 +9,26 @@ namespace NVisitorTest.Api.Lazy
     [TestFixture]
     public class LazyDirectorWithConflictingVisitor
     {
-        public interface IMyFamily {}
-        public interface IMyFamily1 : IMyFamily { }
-        public interface IMyFamily2 : IMyFamily { }
-        public class MyNode : IMyFamily1, IMyFamily2 { }
+        public interface INode {}
+        public interface INode1 : INode { }
+        public interface INode2 : INode { }
+        public class MyNode : INode1, INode2 { }
 
         public interface IConflictingVisitor
-            : ILazyVisitor<IMyFamily, MyDir, IMyFamily>
-            , ILazyVisitor<IMyFamily, MyDir, IMyFamily1>
-            , ILazyVisitor<IMyFamily, MyDir, IMyFamily2>
+            : ILazyVisitor<INode, MyDir, INode>
+            , ILazyVisitor<INode, MyDir, INode1>
+            , ILazyVisitor<INode, MyDir, INode2>
         {
         }
 
         public interface ISolvingVisitor
-            : ILazyVisitor<IMyFamily, MyDir, MyNode>
+            : ILazyVisitor<INode, MyDir, MyNode>
         {
         }
 
-        public class MyDir : LazyDirector<IMyFamily, MyDir>
+        public class MyDir : LazyDirector<INode, MyDir>
         {
-            public MyDir(IEnumerable<ILazyVisitorClass<IMyFamily, MyDir>> visitors) 
+            public MyDir(IEnumerable<ILazyVisitorClass<INode, MyDir>> visitors) 
                 : base(visitors) { }
         }
 
@@ -39,7 +39,7 @@ namespace NVisitorTest.Api.Lazy
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
             var dir = new MyDir(new [] { mockConflictingVisitor.Object});
 
-            IMyFamily node = new MyNode();
+            INode node = new MyNode();
             dir.Visit(node);
         }
 
@@ -48,14 +48,14 @@ namespace NVisitorTest.Api.Lazy
         {
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
             var mockSolvingVisitor = new Mock<ISolvingVisitor>();
-            var dir = new MyDir(new ILazyVisitorClass<IMyFamily, MyDir>[] { mockConflictingVisitor.Object, mockSolvingVisitor.Object });
+            var dir = new MyDir(new ILazyVisitorClass<INode, MyDir>[] { mockConflictingVisitor.Object, mockSolvingVisitor.Object });
 
-            IMyFamily node = new MyNode();
+            INode node = new MyNode();
             dir.Visit(node);
 
-            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<IMyFamily>()), Times.Never);
-            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<IMyFamily1>()), Times.Never);
-            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<IMyFamily2>()), Times.Never);
+            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
+            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<INode1>()), Times.Never);
+            mockConflictingVisitor.Verify(v => v.Visit(dir, It.IsAny<INode2>()), Times.Never);
             mockSolvingVisitor.Verify(v => v.Visit(dir, It.Is<MyNode>(n => n == node)), Times.Once);
         }
 
