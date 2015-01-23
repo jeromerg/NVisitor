@@ -12,7 +12,7 @@ namespace NVisitorTest.Api.Batch
     /// if you use dependency injection (for example, if want to mock it while you test the visitors one by one)
     /// </summary>
     [TestFixture]
-    public class ContravariantDirectorTest
+    public class DirectorWithDirectorContractTest
     {
         
         public interface INode {}

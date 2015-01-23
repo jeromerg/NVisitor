@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Batch\DirectorWithConflictingVisitor.cs" />
-    <Compile Include="Api\Batch\ContravariantDirectorTest.cs" />
+    <Compile Include="Api\Batch\DirectorWithDirectorContractTest.cs" />
     <Compile Include="Api\Batch\DirectorWithTwoCompleteVisitorsTest.cs" />
     <Compile Include="Api\Batch\DirectorWithSingleIncompleteVisitorTest.cs" />
     <Compile Include="Api\Batch\DirectorWithSingleCompleteVisitorTest.cs" />
