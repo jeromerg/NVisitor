@@ -1,10 +1,13 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace NVisitor.Api.Batch
 {
     /// <summary> Contract for each single visitor implementation</summary>
     /// <typeparam name="TFamily">The node family that the director applies to</typeparam>
     /// <typeparam name="TDirector">The director related to the visitor</typeparam>
     /// <typeparam name="TNode">The node type that the visitor visit</typeparam>
-    public interface IVisitor<in TFamily, in TDirector, in TNode> : IVisitorClass<TFamily, TDirector> 
+    [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] // GENERIC PARAMETERS STRICTLY CARACTERIZE THE VISITOR
+    public interface IVisitor<TFamily, TDirector, TNode> : IVisitorClass<TFamily, TDirector> 
         where TDirector : IDirector<TFamily>
         where TNode : TFamily
     {
