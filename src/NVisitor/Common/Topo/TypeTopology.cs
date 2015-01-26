@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NVisitor.Util.Quality;
+using NVisitor.Common.Quality;
 
 namespace NVisitor.Common.Topo
 {

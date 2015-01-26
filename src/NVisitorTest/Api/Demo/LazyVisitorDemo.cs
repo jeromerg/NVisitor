@@ -116,6 +116,7 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
             IEnumerable<Pause> visitPauses = director.Visit(root);
 
             director.Log("Starting processing leaves:");
+            // ReSharper disable once UnusedVariable
             foreach (var pause in visitPauses)
             {
                 director.Log("PROCESSING node " + director.CurrentLeaf.Name);

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NVisitor.Api;
+using NVisitor.Common.Quality;
 using NVisitor.Common.Topo;
-using NVisitor.Util.Quality;
 
 namespace NVisitor.Common
 {

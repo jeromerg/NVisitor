@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using NVisitor.Util.Quality;
+using NVisitor.Common.Quality;
 
 namespace NVisitor.Api
 {

@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using NVisitor.Api.Marker;
-using NVisitor.Util.Quality;
+using NVisitor.Common.Quality;
 
 namespace NVisitor.Api.Batch
 {

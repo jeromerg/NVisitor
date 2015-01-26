@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using NVisitor.Api.Marker;
-using NVisitor.Util.Quality;
+using NVisitor.Common.Quality;
 
 namespace NVisitor.Api.Lazy
 {

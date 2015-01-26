@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using NVisitor.Common;
+using NVisitor.Api.Common;
 
 namespace NVisitor.Api.Lazy
 {
@@ -15,8 +14,7 @@ namespace NVisitor.Api.Lazy
         where TDirector : ILazyDirector<TFamily>
     {
 
-        private readonly VisitorCollection<ILazyVisitorClass<TFamily, TDirector>> mVisitorCollection;
-        private readonly Dictionary<Type, Func<TFamily, IEnumerable<Pause>>> mVisitCacheByNodeType;
+        private readonly IVisitEngine<TFamily, LazyDirector<TFamily, TDirector>, IEnumerable<Pause>> mVisitEngine;
 
         /// <summary>
         /// Initializes a new instance of director with a set of visitors. The Visit(...) method dispatches
@@ -25,8 +23,20 @@ namespace NVisitor.Api.Lazy
         /// <param name="visitors">list of visitor instances: the director dispatches each Visit(...) call to one of these instances</param>
         protected LazyDirector(IEnumerable<ILazyVisitorClass<TFamily, TDirector>> visitors)
         {
-            mVisitorCollection = new VisitorCollection<ILazyVisitorClass<TFamily, TDirector>>(visitors, typeof(ILazyVisitor<,,>), 2);
-            mVisitCacheByNodeType = new Dictionary<Type, Func<TFamily, IEnumerable<Pause>>>();
+            mVisitEngine = new VisitEngine<TFamily, LazyDirector<TFamily, TDirector>, 
+                                                   ILazyVisitorClass<TFamily, TDirector>, 
+                                                   IEnumerable<Pause>>
+                                                   (visitors, typeof(ILazyVisitor<,,>), 2, "Visit");
+        }
+
+        /// <summary>
+        /// Initializes a new instance of director with a shared cache. The Visit(...) method dispatches
+        /// to one of the provided visitor instance depending on the node type.
+        /// </summary>
+        /// <param name="visitEngine">The shared director cache</param>
+        protected LazyDirector(IVisitEngine<TFamily, LazyDirector<TFamily, TDirector>, IEnumerable<Pause>> visitEngine)
+        {
+            mVisitEngine = visitEngine;
         }
 
         /// <summary>
@@ -35,31 +45,12 @@ namespace NVisitor.Api.Lazy
         /// continue the visit to the node children / parent / neighbors
         /// </summary>
         /// <param name="node">The node to visit</param>
-        public virtual IEnumerable<Pause> Visit(TFamily node)
+        public IEnumerable<Pause> Visit(TFamily node)
         {
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            Func<TFamily, IEnumerable<Pause>> visitAction;
-            if (!mVisitCacheByNodeType.TryGetValue(node.GetType(), out visitAction))
-            {
-                // get the visitor instance and the node-type of the visitor
-                Type visitorNodeType;
-                ILazyVisitorClass<TFamily, TDirector> visitor = mVisitorCollection.FindNearestVisitor(node.GetType(), out visitorNodeType);
-
-                // create the closed generic type of the visitor
-                Type visitorClosedType = typeof(ILazyVisitor<,,>).MakeGenericType(typeof(TFamily), typeof(TDirector), visitorNodeType);
-
-                // find the visit method in the closed generic type of the visitor
-                MethodInfo visitMethod = visitorClosedType.GetMethod("Visit");
-                
-                // prepare the visit action and cache it
-                visitAction = someNode => (IEnumerable<Pause>)visitMethod.Invoke(visitor, new object[] { this, someNode });
-                mVisitCacheByNodeType.Add(node.GetType(), visitAction);
-            }
-
-            // call the visit action
-            return visitAction(node);
+            return mVisitEngine.Visit(this, node);
         }
     }
 }
