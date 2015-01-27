@@ -126,8 +126,8 @@ namespace NVisitorTest.Api.Demo.Batch
                 new NodeA()
             };
 
-            var dumpDirector = new Director<NodeFamily, DumpDir>(new DumpVisitors(), new VisitorForNodeC());
-            dumpDirector.State = new DumpDir(); // NEW!!! Updated injected visitors
+            var dumpDirector = new Director<NodeFamily, DumpDir>(new DumpVisitors(), new VisitorForNodeC()); // NEW!!! Updated injected visitors
+            dumpDirector.State = new DumpDir(); 
 
             dumpDirector.Visit(root);
 
@@ -136,7 +136,7 @@ namespace NVisitorTest.Api.Demo.Batch
 
             // Result in console:
             Assert.AreEqual("NodeA visited\r\n" +
-                            "NodeC visited !!!!!!!!\r\n" +
+                            "NodeC visited !!!!!!!!\r\n" +   // NEW!!! 
                             "NodeB visited\r\n" +
                             "NodeA visited\r\n" +
                             "NodeB visited\r\n" +

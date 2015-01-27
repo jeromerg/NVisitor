@@ -8,11 +8,11 @@ namespace NVisitor.Api.Batch
     /// <summary>Caches the visit actions</summary>
     /// <typeparam name="TFamily">The node family</typeparam>
     /// <typeparam name="TDir">The director's type</typeparam>
-    public class DirectorCache<TFamily, TDir>
-        : DirectorCacheBase<TFamily, IVisitorClass<TDir>, Action<IDirector<TFamily, TDir>, TFamily>>
-        , IDirectorCache<TFamily, TDir>
+    public class VisitFactory<TFamily, TDir>
+        : VisitFactory<TFamily, IVisitorClass<TDir>, Action<IDirector<TFamily, TDir>, TFamily>>
+        , IVisitFactory<TFamily, TDir>
     {
-        public DirectorCache(IEnumerable<IVisitorClass<TDir>> visitors)
+        public VisitFactory(IEnumerable<IVisitorClass<TDir>> visitors)
             : base(visitors, typeof (IVisitor<,,>), 2)
         {
         }

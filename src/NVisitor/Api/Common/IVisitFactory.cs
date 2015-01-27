@@ -4,8 +4,8 @@ using NVisitor.Api.Marker;
 namespace NVisitor.Api.Common
 {
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] // GENERIC PARAMETERS STRICTLY CARACTERIZE THE DIRECTOR
-    public interface IDirectorCacheBase<TFamily, TDelegate> : IDirectorCacheMarker
+    public interface IVisitFactory<TFamily, TDelegate> : IVisitFactoryMarker
     {
-        TDelegate GetOrCreate(TFamily node);
+        TDelegate GetVisitDelegate(TFamily node);
     }
 }

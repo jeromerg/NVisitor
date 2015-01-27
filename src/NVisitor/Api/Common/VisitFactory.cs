@@ -4,24 +4,24 @@ using NVisitor.Common;
 
 namespace NVisitor.Api.Common
 {
-    public abstract class DirectorCacheBase<TFamily, TVisitorClass, TDelegate>
-        : IDirectorCacheBase<TFamily, TDelegate>
+    public abstract class VisitFactory<TFamily, TVisitorClass, TVisitDelegate>
+        : IVisitFactory<TFamily, TVisitDelegate>
     {
         private readonly VisitorCollection<TVisitorClass> mVisitorCollection;
-        private readonly Dictionary<Type, TDelegate> mVisitCacheByNodeType;
+        private readonly Dictionary<Type, TVisitDelegate> mVisitCacheByNodeType;
 
-        protected DirectorCacheBase(IEnumerable<TVisitorClass> visitors, Type visitorGenericOpenType, int nodeTypeIndex)
+        protected VisitFactory(IEnumerable<TVisitorClass> visitors, Type visitorGenericOpenType, int nodeTypeIndex)
         {
             mVisitorCollection = new VisitorCollection<TVisitorClass>(visitors, visitorGenericOpenType, nodeTypeIndex);
-            mVisitCacheByNodeType = new Dictionary<Type, TDelegate>();
+            mVisitCacheByNodeType = new Dictionary<Type, TVisitDelegate>();
         }
 
-        public TDelegate GetOrCreate(TFamily node)
+        public TVisitDelegate GetVisitDelegate(TFamily node)
         {
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            TDelegate directorDelegate;
+            TVisitDelegate directorDelegate;
             if (!mVisitCacheByNodeType.TryGetValue(node.GetType(), out directorDelegate))
             {
                 // get the visitor instance and the node-type of the visitor
@@ -35,6 +35,6 @@ namespace NVisitor.Api.Common
             return directorDelegate;
         }
 
-        protected abstract TDelegate CreateVisitDelegate(TFamily node, Type visitorNodeType, TVisitorClass visitorInstance, TDelegate directorDelegate);
+        protected abstract TVisitDelegate CreateVisitDelegate(TFamily node, Type visitorNodeType, TVisitorClass visitorInstance, TVisitDelegate directorDelegate);
     }
 }

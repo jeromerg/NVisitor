@@ -3,15 +3,15 @@ Congratulation, you have succesfully installed *NVisitor*
 
 Lightweight Framework to develop modular extendable visitors
 
-NVisitor enables
-- Defining visitors for a class family without renouncing to extend the class family itself.
-- Interrupting the visit to let the calling procedure process the intermediate state (Lazy visit)
+With NVisitor, you
+- Define visitors for a class family without renouncing to extend the family itself
+- Can pause the visit to process the intermediate result
+- Implement visitors without instrumentalizing the visited class family
 
 Usage
 -----
 
-Look at the demo unit tests: 
-
+Look at demo unit tests: 
     http://github.com/jeromerg/NVisitor/blob/master/src/NVisitorTest/Api/Demo/BatchVisitorDemo.cs
     http://github.com/jeromerg/NVisitor/blob/master/src/NVisitorTest/Api/Demo/LazyVisitorDemo.cs
 
@@ -29,5 +29,5 @@ Links
 
 - NuGet home page: 
 
-    https://www.nuget.org/packages/NVisitor
+    http://www.nuget.org/packages/NVisitor
 

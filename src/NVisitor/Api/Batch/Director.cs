@@ -13,25 +13,25 @@ namespace NVisitor.Api.Batch
     /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
     public sealed class Director<TFamily, TDir> : IDirector<TFamily, TDir>
     {
-        private readonly IDirectorCache<TFamily,TDir> mCache;
+        private readonly IVisitFactory<TFamily,TDir> mCache;
 
         /// <summary>Initializes a new cache for a set of visitors</summary>
         /// <param name="visitorEnumerable">list of visitors belonging to the same visitor class</param>
         public Director(IEnumerable<IVisitorClass<TDir>> visitorEnumerable)
         {
-            mCache = new DirectorCache<TFamily, TDir>(visitorEnumerable);
+            mCache = new VisitFactory<TFamily, TDir>(visitorEnumerable);
         }
 
         /// <summary>Initializes a new cache for a set of visitors</summary>
         /// <param name="visitorArray">list of visitors belonging to the same visitor class</param>
         public Director(params IVisitorClass<TDir>[] visitorArray)
         {
-            mCache = new DirectorCache<TFamily, TDir>(visitorArray);
+            mCache = new VisitFactory<TFamily, TDir>(visitorArray);
         }
 
         /// <summary>Initializes a new cache with a shared cache</summary>
         /// <param name="cache">shared cache for all directors of this type</param>
-        public Director(IDirectorCache<TFamily, TDir> cache)
+        public Director(IVisitFactory<TFamily, TDir> cache)
         {
             mCache = cache;
         }
@@ -46,7 +46,7 @@ namespace NVisitor.Api.Batch
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            Action<IDirector<TFamily, TDir>, TFamily> visitAction = mCache.GetOrCreate(node);
+            Action<IDirector<TFamily, TDir>, TFamily> visitAction = mCache.GetVisitDelegate(node);
 
             visitAction(this, node);
         }

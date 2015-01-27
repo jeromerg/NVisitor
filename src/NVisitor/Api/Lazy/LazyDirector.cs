@@ -13,25 +13,25 @@ namespace NVisitor.Api.Lazy
     /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
     public class LazyDirector<TFamily, TDir> : ILazyDirector<TFamily, TDir>
     {
-        private readonly ILazyDirectorCache<TFamily, TDir> mCache;
+        private readonly ILazyVisitFactory<TFamily, TDir> mCache;
 
         /// <summary>Initializes a new cache for a set of visitors</summary>
         /// <param name="visitors">list of visitors belonging to the same visitor class</param>
         public LazyDirector(IEnumerable<ILazyVisitorClass<TDir>> visitors)
         {
-            mCache = new LazyDirectorCache<TFamily, TDir>(visitors);
+            mCache = new LazyVisitFactory<TFamily, TDir>(visitors);
         }
 
         /// <summary>Initializes a new cache for a set of visitors</summary>
         /// <param name="visitors">list of visitors belonging to the same visitor class</param>
         public LazyDirector(params ILazyVisitorClass<TDir>[] visitors)
         {
-            mCache = new LazyDirectorCache<TFamily, TDir>(visitors);
+            mCache = new LazyVisitFactory<TFamily, TDir>(visitors);
         }
 
         /// <summary>Initializes a new cache with a shared cache</summary>
         /// <param name="cache">shared cache for all directors of this type</param>
-        public LazyDirector(ILazyDirectorCache<TFamily, TDir> cache)
+        public LazyDirector(ILazyVisitFactory<TFamily, TDir> cache)
         {
             mCache = cache;
         }
@@ -46,7 +46,7 @@ namespace NVisitor.Api.Lazy
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            Func<ILazyDirector<TFamily, TDir>, TFamily, IEnumerable<Pause>> visitFunction = mCache.GetOrCreate(node);
+            Func<ILazyDirector<TFamily, TDir>, TFamily, IEnumerable<Pause>> visitFunction = mCache.GetVisitDelegate(node);
 
             return visitFunction(this, node);
         }

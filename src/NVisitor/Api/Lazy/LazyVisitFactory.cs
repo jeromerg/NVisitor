@@ -8,11 +8,11 @@ namespace NVisitor.Api.Lazy
     /// <summary>Dispatches the call to the best visit method, caches the resulting delegates for subsequent calls</summary>
     /// <typeparam name="TFamily">The node family</typeparam>
     /// <typeparam name="TDir">The concrete director type (and state)</typeparam>
-    public class LazyDirectorCache<TFamily, TDir>
-        : DirectorCacheBase<TFamily, ILazyVisitorClass<TDir>, Func<ILazyDirector<TFamily, TDir>, TFamily, IEnumerable<Pause>>>
-        , ILazyDirectorCache<TFamily, TDir>
+    public class LazyVisitFactory<TFamily, TDir>
+        : VisitFactory<TFamily, ILazyVisitorClass<TDir>, Func<ILazyDirector<TFamily, TDir>, TFamily, IEnumerable<Pause>>>
+        , ILazyVisitFactory<TFamily, TDir>
     {
-        public LazyDirectorCache(IEnumerable<ILazyVisitorClass<TDir>> visitors)
+        public LazyVisitFactory(IEnumerable<ILazyVisitorClass<TDir>> visitors)
             : base(visitors, typeof(ILazyVisitor<,,>), 2)
         {
         }
