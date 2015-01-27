@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using NVisitor.Api.Common;
 
 namespace NVisitor.Api.Lazy
 {
@@ -14,27 +13,27 @@ namespace NVisitor.Api.Lazy
     /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
     public class LazyDirector<TFamily, TDir> : ILazyDirector<TFamily, TDir>
     {
-        private readonly ILazyDispatcher<TFamily, TDir> mDispatcher;
+        private readonly ILazyDirectorCache<TFamily, TDir> mCache;
 
-        /// <summary>Initializes a new dispatcher for a set of visitors</summary>
+        /// <summary>Initializes a new cache for a set of visitors</summary>
         /// <param name="visitors">list of visitors belonging to the same visitor class</param>
         public LazyDirector(IEnumerable<ILazyVisitorClass<TDir>> visitors)
         {
-            mDispatcher = new LazyDispatcher<TFamily, TDir>(visitors);
+            mCache = new LazyDirectorCache<TFamily, TDir>(visitors);
         }
 
-        /// <summary>Initializes a new dispatcher for a set of visitors</summary>
+        /// <summary>Initializes a new cache for a set of visitors</summary>
         /// <param name="visitors">list of visitors belonging to the same visitor class</param>
         public LazyDirector(params ILazyVisitorClass<TDir>[] visitors)
         {
-            mDispatcher = new LazyDispatcher<TFamily, TDir>(visitors);
+            mCache = new LazyDirectorCache<TFamily, TDir>(visitors);
         }
 
-        /// <summary>Initializes a new dispatcher with a shared Engine</summary>
-        /// <param name="dispatcher">shared dispatcher for all directors of this type</param>
-        public LazyDirector(ILazyDispatcher<TFamily, TDir> dispatcher)
+        /// <summary>Initializes a new cache with a shared cache</summary>
+        /// <param name="cache">shared cache for all directors of this type</param>
+        public LazyDirector(ILazyDirectorCache<TFamily, TDir> cache)
         {
-            mDispatcher = dispatcher;
+            mCache = cache;
         }
 
         /// <summary>Get/Set a director's state</summary>
@@ -47,7 +46,9 @@ namespace NVisitor.Api.Lazy
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            return mDispatcher.Visit(this, node);
+            Func<ILazyDirector<TFamily, TDir>, TFamily, IEnumerable<Pause>> visitFunction = mCache.GetOrCreate(node);
+
+            return visitFunction(this, node);
         }
 
     }
