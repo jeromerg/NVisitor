@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using NVisitor.Api.Batch;
 
@@ -25,18 +24,14 @@ namespace NVisitorTest.Api.Batch
         {
         }
 
-        public class MyDir : Director<INode, MyDir>
-        {
-            public MyDir(IEnumerable<IVisitorClass<INode, MyDir>> visitors)
-                : base(visitors) { }
-        }
+        public class MyDir {}
 
         [Test]
         public void TestNodeO()
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new Director<INode, MyDir>(mock1.Object, mock2.Object);
 
             INode node = new MyNodeO();
             dir.Visit(node);
@@ -53,7 +48,7 @@ namespace NVisitorTest.Api.Batch
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new Director<INode, MyDir>(mock1.Object, mock2.Object);
 
             INode node = new Mock<INode>().Object;
             dir.Visit(node);
@@ -70,7 +65,7 @@ namespace NVisitorTest.Api.Batch
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new Director<INode, MyDir>(mock1.Object, mock2.Object);
 
             INode node = new MyNodeA();
             dir.Visit(node);
@@ -87,7 +82,7 @@ namespace NVisitorTest.Api.Batch
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new MyDir(new IVisitorClass<INode, MyDir>[] { mock1.Object, mock2.Object });
+            var dir = new Director<INode, MyDir>(mock1.Object, mock2.Object);
 
             INode node = new MyNodeB();
             dir.Visit(node);

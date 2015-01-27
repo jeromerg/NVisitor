@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using NVisitor.Api.Lazy;
 
@@ -21,17 +20,14 @@ namespace NVisitorTest.Api.Lazy
         {
         }
 
-        public class MyDir : LazyDirector<INode, MyDir>
-        {
-            public MyDir(IEnumerable<ILazyVisitorClass<INode, MyDir>> visitors) 
-                : base(visitors) { }
-        }
+        public class MyDir {}
 
         [Test]
         public void TestNodeO()
         {
             var mock = new Mock<IMyVisitor>();
-            var dir = new MyDir(new[] { mock.Object });
+            var dir = new LazyDirector<INode, MyDir>(mock.Object);
+            dir.State = new MyDir();
 
             INode node = new MyNodeO();
             dir.Visit(node);
@@ -46,7 +42,8 @@ namespace NVisitorTest.Api.Lazy
         public void TestNodeA()
         {
             var mock = new Mock<IMyVisitor>();
-            var dir = new MyDir(new[] { mock.Object });
+            var dir = new LazyDirector<INode, MyDir>(mock.Object);
+            dir.State = new MyDir();
 
             INode node = new MyNodeA();
             dir.Visit(node);
@@ -61,7 +58,8 @@ namespace NVisitorTest.Api.Lazy
         public void TestNodeB()
         {
             var mock = new Mock<IMyVisitor>();
-            var dir = new MyDir(new[] { mock.Object });
+            var dir = new LazyDirector<INode, MyDir>(mock.Object);
+            dir.State = new MyDir();
 
             INode node = new MyNodeB();
             dir.Visit(node);
@@ -76,7 +74,8 @@ namespace NVisitorTest.Api.Lazy
         public void TestNodeForeignNode()
         {
             var mock = new Mock<IMyVisitor>();
-            var dir = new MyDir(new[] { mock.Object });
+            var dir = new LazyDirector<INode, MyDir>(mock.Object);
+            dir.State = new MyDir();
 
             INode node = new Mock<INode>().Object;
             dir.Visit(node);

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Moq;
 using NUnit.Framework;
 using NVisitor.Api.Batch;
@@ -8,7 +7,7 @@ namespace NVisitorTest.Api.Batch
 {
     
     /// <summary>
-    /// This class test the scenario, where the director is represented by an interface `IMyDir`. It is typically the case
+    /// This class test the scenario, where the dispatcher is represented by an interface `IMyDir`. It is typically the case
     /// if you use dependency injection (for example, if want to mock it while you test the visitors one by one)
     /// </summary>
     [TestFixture]
@@ -18,12 +17,10 @@ namespace NVisitorTest.Api.Batch
         public interface INode {}
         public class MyNodeO : INode {}
 
-        /// <summary> Interface IDENTYING the director uniquely </summary>
-        public interface IMyDir : IDirector<INode> {}
+        /// <summary> Interface IDENTYING the dispatcher uniquely </summary>
+        public interface IMyDir {}
 
-        public class MyDir1 : Director<INode, IMyDir>, IMyDir {
-            public MyDir1(IEnumerable<IVisitorClass<INode, IMyDir>> visitors) : base(visitors) { }
-        }
+        public class MyDir1 : IMyDir {}
 
         public interface IMyVisitor
             : IVisitor<INode, IMyDir, INode>
@@ -34,7 +31,7 @@ namespace NVisitorTest.Api.Batch
         public void AllRelatedToIMyDir_Test()
         {
             var mock = new Mock<IMyVisitor>();
-            var dir = new MyDir1(Enumerable.Repeat<IVisitorClass<INode, IMyDir>>(mock.Object, 1));
+            var dir = new Director<INode, IMyDir>(Enumerable.Repeat<IVisitorClass<IMyDir>>(mock.Object, 1));
 
             MyNodeO node = new MyNodeO();
             

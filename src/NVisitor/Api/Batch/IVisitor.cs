@@ -2,18 +2,17 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NVisitor.Api.Batch
 {
-    /// <summary> Contract for each single visitor implementation</summary>
-    /// <typeparam name="TFamily">The node family that the director applies to</typeparam>
-    /// <typeparam name="TDirector">The director related to the visitor</typeparam>
-    /// <typeparam name="TNode">The node type that the visitor visit</typeparam>
+    /// <summary>Visitor's contract</summary>
+    /// <typeparam name="TFamily">The node family</typeparam>
+    /// <typeparam name="TDir">The director type</typeparam>
+    /// <typeparam name="TNode">The concrete node type supported by the visitor</typeparam>
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] // GENERIC PARAMETERS STRICTLY CARACTERIZE THE VISITOR
-    public interface IVisitor<TFamily, TDirector, TNode> : IVisitorClass<TFamily, TDirector> 
-        where TDirector : IDirector<TFamily>
+    public interface IVisitor<TFamily, TDir, TNode> : IVisitorClass<TDir> 
         where TNode : TFamily
     {
         /// <summary>The visit method to implement</summary>
-        /// <param name="director">You can read and update state of the director during the visit</param>
+        /// <param name="director">director to continue the visit or read/write into the director's state </param>
         /// <param name="node">The node to visit</param>
-        void Visit(TDirector director, TNode node);
+        void Visit(IDirector<TFamily, TDir> director, TNode node);
     }
 }

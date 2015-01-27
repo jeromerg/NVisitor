@@ -1,18 +1,19 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NVisitor.Api.Lazy
 {
-    /// <summary> Contract for each single visitor implementation</summary>
-    /// <typeparam name="TFamily">The node family that the director applies to</typeparam>
-    /// <typeparam name="TDirector">The director related to the visitor</typeparam>
-    /// <typeparam name="TNode">The node type that the visitor visit</typeparam>
-    public interface ILazyVisitor<in TFamily, in TDirector, in TNode> : ILazyVisitorClass<TFamily, TDirector> 
-        where TDirector : ILazyDirector<TFamily>
+    /// <summary>Visitor's contract</summary>
+    /// <typeparam name="TFamily">The node family</typeparam>
+    /// <typeparam name="TDir">The director type</typeparam>
+    /// <typeparam name="TNode">The concrete node type supported by the visitor</typeparam>
+    [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] // GENERIC PARAMETERS STRICTLY CARACTERIZE THE VISITOR
+    public interface ILazyVisitor<TFamily, TDir, TNode> : ILazyVisitorClass<TDir>
         where TNode : TFamily
     {
         /// <summary>The visit method to implement</summary>
-        /// <param name="director">You can read and update state of the director during the visit</param>
+        /// <param name="director">director to continue the visit or read/write into the director's state </param>
         /// <param name="node">The node to visit</param>
-        IEnumerable<Pause> Visit(TDirector director, TNode node);
+        IEnumerable<Pause> Visit(ILazyDirector<TFamily, TDir> director, TNode node);
     }
 }

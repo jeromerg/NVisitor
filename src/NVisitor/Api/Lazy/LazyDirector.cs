@@ -5,52 +5,50 @@ using NVisitor.Api.Common;
 namespace NVisitor.Api.Lazy
 {
     /// <summary>
-    /// Inherit from this LazyDirector class to create a new algorithm that applies to the TFamily. Then implement multiple
-    /// visitors that implement the ILazyVisitor interface
+    /// A Director 
+    /// 1) Is the entry-point for a visit
+    /// 2) Dispatches visit to the best visitor
+    /// 3) Holds the state of the visit via its property State
     /// </summary>
     /// <typeparam name="TFamily">The node family type</typeparam>
-    /// <typeparam name="TDirector">The LazyDirector concrete implementation</typeparam>
-    public abstract class LazyDirector<TFamily, TDirector> : ILazyDirector<TFamily>
-        where TDirector : ILazyDirector<TFamily>
+    /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
+    public class LazyDirector<TFamily, TDir> : ILazyDirector<TFamily, TDir>
     {
+        private readonly ILazyDispatcher<TFamily, TDir> mDispatcher;
 
-        private readonly IVisitEngine<TFamily, LazyDirector<TFamily, TDirector>, IEnumerable<Pause>> mVisitEngine;
-
-        /// <summary>
-        /// Initializes a new instance of director with a set of visitors. The Visit(...) method dispatches
-        /// to one of the provided visitor instance depending on the node type.
-        /// </summary>
-        /// <param name="visitors">list of visitor instances: the director dispatches each Visit(...) call to one of these instances</param>
-        protected LazyDirector(IEnumerable<ILazyVisitorClass<TFamily, TDirector>> visitors)
+        /// <summary>Initializes a new dispatcher for a set of visitors</summary>
+        /// <param name="visitors">list of visitors belonging to the same visitor class</param>
+        public LazyDirector(IEnumerable<ILazyVisitorClass<TDir>> visitors)
         {
-            mVisitEngine = new VisitEngine<TFamily, LazyDirector<TFamily, TDirector>, 
-                                                   ILazyVisitorClass<TFamily, TDirector>, 
-                                                   IEnumerable<Pause>>
-                                                   (visitors, typeof(ILazyVisitor<,,>), 2, "Visit");
+            mDispatcher = new LazyDispatcher<TFamily, TDir>(visitors);
         }
 
-        /// <summary>
-        /// Initializes a new instance of director with a shared cache. The Visit(...) method dispatches
-        /// to one of the provided visitor instance depending on the node type.
-        /// </summary>
-        /// <param name="visitEngine">The shared director cache</param>
-        protected LazyDirector(IVisitEngine<TFamily, LazyDirector<TFamily, TDirector>, IEnumerable<Pause>> visitEngine)
+        /// <summary>Initializes a new dispatcher for a set of visitors</summary>
+        /// <param name="visitors">list of visitors belonging to the same visitor class</param>
+        public LazyDirector(params ILazyVisitorClass<TDir>[] visitors)
         {
-            mVisitEngine = visitEngine;
+            mDispatcher = new LazyDispatcher<TFamily, TDir>(visitors);
         }
 
-        /// <summary>
-        /// The Visit method, that dispatches the call to the best visitor depending on the node type.
-        /// This Visit method is the entry-point for a visit. It is also called by the visitors themselves, in order to
-        /// continue the visit to the node children / parent / neighbors
-        /// </summary>
+        /// <summary>Initializes a new dispatcher with a shared Engine</summary>
+        /// <param name="dispatcher">shared dispatcher for all directors of this type</param>
+        public LazyDirector(ILazyDispatcher<TFamily, TDir> dispatcher)
+        {
+            mDispatcher = dispatcher;
+        }
+
+        /// <summary>Get/Set a director's state</summary>
+        public TDir State { get; set; }
+
+        /// <summary>Dispatches the call to the best visitor depending on the node's type</summary>
         /// <param name="node">The node to visit</param>
         public IEnumerable<Pause> Visit(TFamily node)
         {
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            return mVisitEngine.Visit(this, node);
+            return mDispatcher.Visit(this, node);
         }
+
     }
 }

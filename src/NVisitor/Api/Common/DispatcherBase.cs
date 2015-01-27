@@ -5,31 +5,31 @@ using NVisitor.Common;
 
 namespace NVisitor.Api.Common
 {
-    public class VisitEngine<TFamily, TDirector, TVisitorClass, TResult> 
-        : IVisitEngine<TFamily, TDirector, TResult>
+    public abstract class DispatcherBase<TFamily, TDir, TGenericDirector, TVisitorClass, TResult>
+        : IDispatcherBase<TFamily, TGenericDirector, TResult>
     {
         private readonly Type mVisitorGenericOpenType;
         private readonly VisitorCollection<TVisitorClass> mVisitorCollection;
-        private readonly Dictionary<Type, Func<TDirector, TFamily, TResult>> mVisitCacheByNodeType;
+        private readonly Dictionary<Type, Func<TGenericDirector, TFamily, TResult>> mVisitCacheByNodeType;
         private readonly string mVisitMethodName;
 
-        public VisitEngine(IEnumerable<TVisitorClass> visitors, 
+        protected DispatcherBase(IEnumerable<TVisitorClass> visitors, 
                                 Type visitorGenericOpenType, 
                                 int nodeTypeIndex, 
                                 string visitMethodName)
         {
             mVisitorGenericOpenType = visitorGenericOpenType;
             mVisitorCollection = new VisitorCollection<TVisitorClass>(visitors, visitorGenericOpenType, nodeTypeIndex);
-            mVisitCacheByNodeType = new Dictionary<Type, Func<TDirector, TFamily, TResult>>();
+            mVisitCacheByNodeType = new Dictionary<Type, Func<TGenericDirector, TFamily, TResult>>();
             mVisitMethodName = visitMethodName;
         }
 
-        public TResult Visit(TDirector director, TFamily node)
+        public TResult Visit(TGenericDirector director, TFamily node)
         {
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            Func<TDirector, TFamily, TResult> visitAction;
+            Func<TGenericDirector, TFamily, TResult> visitAction;
             if (!mVisitCacheByNodeType.TryGetValue(node.GetType(), out visitAction))
             {
                 // get the visitor instance and the node-type of the visitor
@@ -37,7 +37,7 @@ namespace NVisitor.Api.Common
                 TVisitorClass visitor = mVisitorCollection.FindNearestVisitor(node.GetType(), out visitorNodeType);
 
                 // create the closed generic type of the visitor
-                Type visitorClosedType = mVisitorGenericOpenType.MakeGenericType(typeof(TFamily), typeof(TDirector), visitorNodeType);
+                Type visitorClosedType = mVisitorGenericOpenType.MakeGenericType(typeof(TFamily), typeof(TDir), visitorNodeType);
 
                 // find the visit method in the closed generic type of the visitor
                 MethodInfo visitMethod = visitorClosedType.GetMethod(mVisitMethodName);

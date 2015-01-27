@@ -1,49 +1,53 @@
 using System;
 using System.Collections.Generic;
 using NVisitor.Api.Common;
-using NVisitor.Common.Quality;
 
 namespace NVisitor.Api.Batch
 {
     /// <summary>
-    /// Inherit from this Director class to create a new algorithm that applies to the TFamily. Then implement multiple
-    /// visitors that implement the IVisitor interface
+    /// A Director 
+    /// 1) Is the entry-point for a visit
+    /// 2) Dispatches visit to the best visitor
+    /// 3) Holds the state of the visit via its property State
     /// </summary>
     /// <typeparam name="TFamily">The node family type</typeparam>
-    /// <typeparam name="TDirector">The concrete Director contract/implementation, which is provided to the visitor during the visit</typeparam>
-    public abstract class Director<TFamily, TDirector> : IDirector<TFamily>
-        where TDirector : IDirector<TFamily>
+    /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
+    public sealed class Director<TFamily, TDir> : IDirector<TFamily, TDir>
     {
-        [UsedImplicitly]
-        private class Void { }
+        private readonly IDispatcherBase<TFamily, IDirector<TFamily, TDir>, object> mDispatcher;
 
-        private readonly IVisitEngine<TFamily, TDirector, IEnumerable<Void>> mVisitEngine;
-
-        /// <summary>
-        /// Initializes a new instance of director with a set of visitors. The Visit(...) method dispatches
-        /// to one of the provided visitor instance depending on the node type.
-        /// </summary>
-        /// <param name="visitors">list of visitor instances: the director dispatches each Visit(...) call to one of these instances</param>
-        protected Director(IEnumerable<IVisitorClass<TFamily, TDirector>> visitors)
+        /// <summary>Initializes a new dispatcher for a set of visitors</summary>
+        /// <param name="visitorEnumerable">list of visitors belonging to the same visitor class</param>
+        public Director(IEnumerable<IVisitorClass<TDir>> visitorEnumerable)
         {
-            mVisitEngine = new VisitEngine<TFamily, TDirector,
-                                                   IVisitorClass<TFamily, TDirector>,
-                                                   IEnumerable<Void>>
-                                                   (visitors, typeof(IVisitor<,,>), 2, "Visit");
+            mDispatcher = new Dispatcher<TFamily, TDir>(visitorEnumerable);
         }
 
-        /// <summary>
-        /// The Visit method, that dispatches the call to the best visitor depending on the node type.
-        /// This Visit method is the entry-point for a visit. It is also called by the visitors themselves, in order to
-        /// continue the visit to the node children / parent / neighbors
-        /// </summary>
+        /// <summary>Initializes a new dispatcher for a set of visitors</summary>
+        /// <param name="visitorArray">list of visitors belonging to the same visitor class</param>
+        public Director(params IVisitorClass<TDir>[] visitorArray)
+        {
+            mDispatcher = new Dispatcher<TFamily, TDir>(visitorArray);
+        }
+
+        /// <summary>Initializes a new dispatcher with a shared Engine</summary>
+        /// <param name="dispatcher">shared dispatcher for all directors of this type</param>
+        public Director(IDispatcher<TFamily, TDir> dispatcher)
+        {
+            mDispatcher = dispatcher;
+        }
+
+        /// <summary>Get/Set a director's state</summary>
+        public TDir State { get; set; }
+
+        /// <summary>Dispatches the call to the best visitor depending on the node's type</summary>
         /// <param name="node">The node to visit</param>
         public void Visit(TFamily node)
         {
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            mVisitEngine.Visit(this, node);
+            mDispatcher.Visit(this, node);
         }
     }
 }

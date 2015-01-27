@@ -1,17 +1,19 @@
-﻿namespace NVisitor.Common.Topo
+﻿using System;
+
+namespace NVisitor.Common.Topo
 {
     public class TargetTypeInfo
     {
-        private readonly System.Type mType;
+        private readonly Type mType;
         private readonly TargetTypeStatus mStatus;
 
-        public TargetTypeInfo(System.Type type, TargetTypeStatus status)
+        public TargetTypeInfo(Type type, TargetTypeStatus status)
         {
             mType = type;
             mStatus = status;
         }
 
-        public System.Type Type
+        public Type Type
         {
             get { return mType; }
         }

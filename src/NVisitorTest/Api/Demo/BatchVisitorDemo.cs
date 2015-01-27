@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Autofac;
 using NUnit.Framework;
 using NVisitor.Api.Batch;
 using NVisitor.Api.Marker;
+using NVisitorTest.Api.Demo.Batch.Extension;
 
 // ReSharper disable once CheckNamespace
 namespace NVisitorTest.Api.Demo.Batch
@@ -26,29 +28,24 @@ namespace NVisitorTest.Api.Demo.Batch
     // 2. In the same Core Assembly, you declare a Dump director and the visitors for the two nodes:
     // ---------------------------------------------------------------------------------------------
 
-    public class DumpDirector : Director<NodeFamily, DumpDirector>
+    public class DumpDir 
     {
-        public DumpDirector(params IVisitorClass<NodeFamily, DumpDirector>[] visitors)
-            : base(visitors)
-        {
-        }
-
         public StringBuilder StringBuilder = new StringBuilder();
     }
 
     public class DumpVisitors
-        : IVisitor<NodeFamily, DumpDirector, NodeA>
-        , IVisitor<NodeFamily, DumpDirector, NodeB>
+        : IVisitor<NodeFamily, DumpDir, NodeA>
+        , IVisitor<NodeFamily, DumpDir, NodeB>
     {
-        public void Visit(DumpDirector director, NodeA node)
+        public void Visit(IDirector<NodeFamily, DumpDir> director, NodeA node)
         {
-            director.StringBuilder.AppendLine("NodeA visited");
+            director.State.StringBuilder.AppendLine("NodeA visited");
             node.ForEach(n => director.Visit(n)); // visit children
         }
 
-        public void Visit(DumpDirector director, NodeB node)
+        public void Visit(IDirector<NodeFamily, DumpDir> director, NodeB node)
         {
-            director.StringBuilder.AppendLine("NodeB visited");
+            director.State.StringBuilder.AppendLine("NodeB visited");
             node.ForEach(n => director.Visit(n)); // visit children
         }
     }
@@ -69,11 +66,12 @@ namespace NVisitorTest.Api.Demo.Batch
                 new NodeA()
             };
 
-            var dumpDirector = new DumpDirector(new DumpVisitors());
+            var dumpDirector = new Director<NodeFamily, DumpDir>(new DumpVisitors());
+            dumpDirector.State = new DumpDir();
 
             dumpDirector.Visit(root);
 
-            string dump = dumpDirector.StringBuilder.ToString();
+            string dump = dumpDirector.State.StringBuilder.ToString();
             Console.WriteLine(dump);
 
             // Result in console:
@@ -96,17 +94,17 @@ namespace NVisitorTest.Api.Demo.Batch
     }
 
     // ------------------------------------------------------------------------------
-    // 5. With NVisitor, you can upgrade the DumpDirector with an additional visitor:
+    // 5. With NVisitor, you can upgrade the DumpDir with an additional visitor:
     // ------------------------------------------------------------------------------
 
     namespace Extension
     {
         public class VisitorForNodeC
-            : IVisitor<NodeFamily, DumpDirector, NodeC>
+            : IVisitor<NodeFamily, DumpDir, NodeC>
         {
-            public void Visit(DumpDirector director, NodeC node)
+            public void Visit(IDirector<NodeFamily, DumpDir> director, NodeC node)
             {
-                director.StringBuilder.AppendLine("NodeC visited !!!!!!!!");
+                director.State.StringBuilder.AppendLine("NodeC visited !!!!!!!!");
             }
         }
     }
@@ -123,16 +121,17 @@ namespace NVisitorTest.Api.Demo.Batch
         {
             var root = new NodeA
             {
-                new Extension.NodeC(), // NEW!!!
+                new NodeC(), // NEW!!!
                 new NodeB { new NodeA(), new NodeB()},
                 new NodeA()
             };
 
-            var dumpDirector = new DumpDirector(new DumpVisitors(), new Extension.VisitorForNodeC()); // NEW!!! Updated injected visitors
+            var dumpDirector = new Director<NodeFamily, DumpDir>(new DumpVisitors(), new VisitorForNodeC());
+            dumpDirector.State = new DumpDir(); // NEW!!! Updated injected visitors
 
             dumpDirector.Visit(root);
 
-            string dump = dumpDirector.StringBuilder.ToString();
+            string dump = dumpDirector.State.StringBuilder.ToString();
             Console.WriteLine(dump);
 
             // Result in console:
@@ -160,17 +159,18 @@ namespace NVisitorTest.Api.Demo.Batch
             // nodes to visit
             var root = new NodeA
             {
-                new Extension.NodeC(), // NEW!!!
+                new NodeC(), // NEW!!!
                 new NodeB { new NodeA(), new NodeB()},
                 new NodeA()
             };
 
-            // !!!!!! Let the container create a new instance of DumpDirector with all available related directors:
-            var dumpDirector = container.Resolve<DumpDirector>();
+            // !!!!!! Let the container create a new instance of DumpDir with all available related directors:
+            var dumpDirector = container.Resolve<IDirector<NodeFamily, DumpDir>>();
+            dumpDirector.State = new DumpDir();
 
             dumpDirector.Visit(root);
 
-            string dump = dumpDirector.StringBuilder.ToString();
+            string dump = dumpDirector.State.StringBuilder.ToString();
             Console.WriteLine(dump);
 
             // Result in console is the same:
@@ -189,9 +189,11 @@ namespace NVisitorTest.Api.Demo.Batch
             Assembly assembly = Assembly.GetExecutingAssembly();
 
             // register visitor's directors. 
-            builder.RegisterAssemblyTypes(assembly)
-                .Where(t => typeof (IDirectorMarker).IsAssignableFrom(t))
+            builder.RegisterGeneric(typeof(Director<,>))
+                .FindConstructorsWith(t => t.GetConstructors()
+                                            .Where(c => c.GetParameters()[0].Name == "visitorArray").ToArray())
                 .AsSelf()
+                .As(typeof(IDirector<,>))
                 .InstancePerDependency(); // Directors are stateful
 
             // register visitors. 

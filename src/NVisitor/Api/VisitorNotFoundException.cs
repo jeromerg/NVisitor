@@ -4,6 +4,7 @@ using NVisitor.Common.Topo;
 
 namespace NVisitor.Api
 {
+    [Serializable]
     public class VisitorNotFoundException : Exception
     {
         internal VisitorNotFoundException(TargetTypeNotResolvedException exception)

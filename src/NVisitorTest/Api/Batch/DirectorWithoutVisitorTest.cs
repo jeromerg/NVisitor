@@ -13,10 +13,7 @@ namespace NVisitorTest.Api.Batch
         public class NodeA : INode { }
         public class NodeB : NodeA {}
 
-        public class Dir : Director<INode, Dir>
-        {
-            public Dir() : base(new IVisitorClass<INode, Dir>[] { }) { }
-        }
+        public class Dir { }
 
 
         public IEnumerable<INode> TestCaseSource()
@@ -31,7 +28,7 @@ namespace NVisitorTest.Api.Batch
         [ExpectedException(typeof(VisitorNotFoundException))]
         public void Test(INode node)
         {
-            var dir = new Dir();
+            var dir = new Director<INode, Dir>();
             dir.Visit(node);
         }
     }

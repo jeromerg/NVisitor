@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using NVisitor.Api;
 using NVisitor.Api.Batch;
@@ -26,18 +25,14 @@ namespace NVisitorTest.Api.Batch
         {
         }
 
-        public class MyDir : Director<INode, MyDir>
-        {
-            public MyDir(IEnumerable<IVisitorClass<INode, MyDir>> visitors) 
-                : base(visitors) { }
-        }
+        public class MyDir {}
 
         [Test]
         [ExpectedException(typeof(VisitorNotFoundException))]
         public void TestWithConflictingVisitor()
         {
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
-            var dir = new MyDir(new [] { mockConflictingVisitor.Object});
+            var dir = new Director<INode, MyDir>(mockConflictingVisitor.Object);
 
             INode node = new MyNode();
             dir.Visit(node);
@@ -48,7 +43,7 @@ namespace NVisitorTest.Api.Batch
         {
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
             var mockSolvingVisitor = new Mock<ISolvingVisitor>();
-            var dir = new MyDir(new IVisitorClass<INode, MyDir>[] { mockConflictingVisitor.Object, mockSolvingVisitor.Object });
+            var dir = new Director<INode, MyDir>(mockConflictingVisitor.Object, mockSolvingVisitor.Object);
 
             INode node = new MyNode();
             dir.Visit(node);

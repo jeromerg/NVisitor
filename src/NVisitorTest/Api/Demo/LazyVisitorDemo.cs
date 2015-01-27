@@ -33,14 +33,9 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
     //    leaf as soon as the the visitor found it. So you create for that purpose a LazyDirector
     // ---------------------------------------------------------------------------------------------
 
-    public class FindLeavesDirector : LazyDirector<NodeFamily, FindLeavesDirector>
+    public class FindLeavesDir 
     {
         private readonly StringBuilder mLog = new StringBuilder();
-
-        public FindLeavesDirector(params ILazyVisitorClass<NodeFamily, FindLeavesDirector>[] visitors)
-            : base(visitors)
-        {
-        }
 
         public NodeFamily CurrentLeaf { get; set; }
 
@@ -51,21 +46,21 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
             mLog.AppendLine(line);
         }
 
-        public override string ToString() { return mLog.ToString(); }
+        public string GetDumpResult() { return mLog.ToString(); }
     }
 
     public class FindLeavesVisitors
-        : ILazyVisitor<NodeFamily, FindLeavesDirector, NodeA>
-        , ILazyVisitor<NodeFamily, FindLeavesDirector, NodeB>
+        : ILazyVisitor<NodeFamily, FindLeavesDir, NodeA>
+        , ILazyVisitor<NodeFamily, FindLeavesDir, NodeB>
     {
-        public IEnumerable<Pause> Visit(FindLeavesDirector director, NodeA node)
+        public IEnumerable<Pause> Visit(ILazyDirector<NodeFamily, FindLeavesDir> director, NodeA node)
         {
-            director.Log("... visiting node {0} (NodeA's visitor is speaking)", node.Name);
+            director.State.Log("... visiting node {0} (NodeA's visitor is speaking)", node.Name);
 
             // if leaf, then pause the visit
             if (node.Count == 0)
             {
-                director.CurrentLeaf = node;
+                director.State.CurrentLeaf = node;
                 yield return Pause.Now;
             }
 
@@ -75,13 +70,13 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
                     yield return pause;
         }
 
-        public IEnumerable<Pause> Visit(FindLeavesDirector director, NodeB node)
+        public IEnumerable<Pause> Visit(ILazyDirector<NodeFamily, FindLeavesDir> director, NodeB node)
         {
-            director.Log("... visiting node {0} (NodeB's visitor is speaking)", node.Name);
+            director.State.Log("... visiting node {0} (NodeB's visitor is speaking)", node.Name);
  
             if (node.Count == 0)
             {
-                director.CurrentLeaf = node;
+                director.State.CurrentLeaf = node;
                 yield return Pause.Now;
             }
 
@@ -106,20 +101,22 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
                 new NodeB("2")
                 {
                     new NodeA("3"), // leaf
-                    new NodeB("4"), // leaf
+                    new NodeB("4") // leaf
                 },
                 new NodeA("5")      // leaf
             };
 
-            var director = new FindLeavesDirector(new FindLeavesVisitors());
+            
+            var director = new LazyDirector<NodeFamily, FindLeavesDir>(new FindLeavesVisitors());
+            director.State = new FindLeavesDir();
 
             IEnumerable<Pause> visitPauses = director.Visit(root);
 
-            director.Log("Starting processing leaves:");
+            director.State.Log("Starting processing leaves:");
             // ReSharper disable once UnusedVariable
             foreach (var pause in visitPauses)
             {
-                director.Log("PROCESSING node " + director.CurrentLeaf.Name);
+                director.State.Log("PROCESSING node " + director.State.CurrentLeaf.Name);
             }
 
             // Result in console:
@@ -131,7 +128,7 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
                             "... visiting node 4 (NodeB's visitor is speaking)\r\n" +
                             "PROCESSING node 4\r\n" +
                             "... visiting node 5 (NodeA's visitor is speaking)\r\n" +
-"PROCESSING node 5\r\n", director.ToString());
+                            "PROCESSING node 5\r\n", director.State.GetDumpResult());
 
         }
     }

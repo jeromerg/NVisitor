@@ -4,6 +4,7 @@ using NVisitor.Common.Quality;
 
 namespace NVisitor.Api
 {
+    [Serializable]
     public class VisitorConflictException : Exception
     {
         [StringFormatMethod("format")]

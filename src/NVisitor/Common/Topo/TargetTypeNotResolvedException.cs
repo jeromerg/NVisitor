@@ -5,6 +5,7 @@ using System.Text;
 
 namespace NVisitor.Common.Topo
 {
+    [Serializable]
     internal class TargetTypeNotResolvedException : Exception
     {
         private readonly Type mType;

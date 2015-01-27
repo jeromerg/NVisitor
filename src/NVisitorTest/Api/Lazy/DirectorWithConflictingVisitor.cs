@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using NVisitor.Api;
 using NVisitor.Api.Lazy;
@@ -26,18 +25,15 @@ namespace NVisitorTest.Api.Lazy
         {
         }
 
-        public class MyDir : LazyDirector<INode, MyDir>
-        {
-            public MyDir(IEnumerable<ILazyVisitorClass<INode, MyDir>> visitors) 
-                : base(visitors) { }
-        }
+        public class MyDir {}
 
         [Test]
         [ExpectedException(typeof(VisitorNotFoundException))]
         public void TestWithConflictingVisitor()
         {
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
-            var dir = new MyDir(new [] { mockConflictingVisitor.Object});
+            var dir = new LazyDirector<INode, MyDir>(mockConflictingVisitor.Object);
+            dir.State = new MyDir();
 
             INode node = new MyNode();
             dir.Visit(node);
@@ -48,7 +44,8 @@ namespace NVisitorTest.Api.Lazy
         {
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
             var mockSolvingVisitor = new Mock<ISolvingVisitor>();
-            var dir = new MyDir(new ILazyVisitorClass<INode, MyDir>[] { mockConflictingVisitor.Object, mockSolvingVisitor.Object });
+            var dir = new LazyDirector<INode, MyDir>(mockConflictingVisitor.Object, mockSolvingVisitor.Object);
+            dir.State = new MyDir();
 
             INode node = new MyNode();
             dir.Visit(node);
