@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using Autofac;
@@ -28,8 +27,13 @@ namespace NVisitorTest.Api.Demo.Batch
     // 2. In the same Core Assembly, you declare a Dump director and the visitors for the two nodes:
     // ---------------------------------------------------------------------------------------------
 
-    public class DumpDir 
+    public class DumpDir : Director<NodeFamily, DumpDir>
     {
+        public DumpDir(params IVisitorClass<NodeFamily, DumpDir>[] visitorArray)
+            : base(visitorArray)
+        {
+        }
+
         public StringBuilder StringBuilder = new StringBuilder();
     }
 
@@ -37,15 +41,15 @@ namespace NVisitorTest.Api.Demo.Batch
         : IVisitor<NodeFamily, DumpDir, NodeA>
         , IVisitor<NodeFamily, DumpDir, NodeB>
     {
-        public void Visit(IDirector<NodeFamily, DumpDir> director, NodeA node)
+        public void Visit(DumpDir director, NodeA node)
         {
-            director.State.StringBuilder.AppendLine("NodeA visited");
+            director.StringBuilder.AppendLine("NodeA visited");
             node.ForEach(n => director.Visit(n)); // visit children
         }
 
-        public void Visit(IDirector<NodeFamily, DumpDir> director, NodeB node)
+        public void Visit(DumpDir director, NodeB node)
         {
-            director.State.StringBuilder.AppendLine("NodeB visited");
+            director.StringBuilder.AppendLine("NodeB visited");
             node.ForEach(n => director.Visit(n)); // visit children
         }
     }
@@ -66,12 +70,11 @@ namespace NVisitorTest.Api.Demo.Batch
                 new NodeA()
             };
 
-            var dumpDirector = new Director<NodeFamily, DumpDir>(new DumpVisitors());
-            dumpDirector.State = new DumpDir();
+            DumpDir dumpDirector = new DumpDir(new DumpVisitors());
 
             dumpDirector.Visit(root);
 
-            string dump = dumpDirector.State.StringBuilder.ToString();
+            string dump = dumpDirector.StringBuilder.ToString();
             Console.WriteLine(dump);
 
             // Result in console:
@@ -102,9 +105,9 @@ namespace NVisitorTest.Api.Demo.Batch
         public class VisitorForNodeC
             : IVisitor<NodeFamily, DumpDir, NodeC>
         {
-            public void Visit(IDirector<NodeFamily, DumpDir> director, NodeC node)
+            public void Visit(DumpDir director, NodeC node)
             {
-                director.State.StringBuilder.AppendLine("NodeC visited !!!!!!!!");
+                director.StringBuilder.AppendLine("NodeC visited !!!!!!!!");
             }
         }
     }
@@ -126,12 +129,11 @@ namespace NVisitorTest.Api.Demo.Batch
                 new NodeA()
             };
 
-            var dumpDirector = new Director<NodeFamily, DumpDir>(new DumpVisitors(), new VisitorForNodeC());
-            dumpDirector.State = new DumpDir(); // NEW!!! Updated injected visitors
+            var dumpDirector = new DumpDir(new DumpVisitors(), new VisitorForNodeC()); // NEW!!! Updated injected visitors
 
             dumpDirector.Visit(root);
 
-            string dump = dumpDirector.State.StringBuilder.ToString();
+            string dump = dumpDirector.StringBuilder.ToString();
             Console.WriteLine(dump);
 
             // Result in console:
@@ -165,12 +167,11 @@ namespace NVisitorTest.Api.Demo.Batch
             };
 
             // !!!!!! Let the container create a new instance of DumpDir with all available related directors:
-            var dumpDirector = container.Resolve<IDirector<NodeFamily, DumpDir>>();
-            dumpDirector.State = new DumpDir();
+            DumpDir dumpDirector = container.Resolve<DumpDir>();
 
             dumpDirector.Visit(root);
 
-            string dump = dumpDirector.State.StringBuilder.ToString();
+            string dump = dumpDirector.StringBuilder.ToString();
             Console.WriteLine(dump);
 
             // Result in console is the same:
@@ -189,11 +190,9 @@ namespace NVisitorTest.Api.Demo.Batch
             Assembly assembly = Assembly.GetExecutingAssembly();
 
             // register visitor's directors. 
-            builder.RegisterGeneric(typeof(Director<,>))
-                .FindConstructorsWith(t => t.GetConstructors()
-                                            .Where(c => c.GetParameters()[0].Name == "visitorArray").ToArray())
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(t => typeof(IDirectorMarker).IsAssignableFrom(t))
                 .AsSelf()
-                .As(typeof(IDirector<,>))
                 .InstancePerDependency(); // Directors are stateful
 
             // register visitors. 

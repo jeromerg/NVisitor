@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using NVisitor.Api.Batch;
 using NVisitor.Api.Common;
 
 namespace NVisitor.Api.Lazy
@@ -12,10 +11,11 @@ namespace NVisitor.Api.Lazy
     /// <typeparam name="TFamily">The node family</typeparam>
     /// <typeparam name="TDir">The concrete director type (and state)</typeparam>
     public class LazyDispatcher<TFamily, TDir>
-        : DispatcherBase<TFamily, TDir, ILazyDirector<TFamily, TDir>, ILazyVisitorClass<TDir>, IEnumerable<Pause>>
-        , ILazyDispatcher<TFamily, TDir>
+        : DispatcherBase<TFamily, TDir, ILazyDirector<TFamily, TDir>, ILazyVisitorClass<TFamily, TDir>, IEnumerable<Pause>>
+        , ILazyDispatcher<TFamily, TDir> 
+        where TDir : ILazyDirector<TFamily, TDir>
     {
-        public LazyDispatcher(IEnumerable<ILazyVisitorClass<TDir>> visitors)
+        public LazyDispatcher(IEnumerable<ILazyVisitorClass<TFamily, TDir>> visitors)
             : base(visitors, typeof(ILazyVisitor<,,>), 2, "Visit")
         {
         }

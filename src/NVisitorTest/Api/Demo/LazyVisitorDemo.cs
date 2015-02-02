@@ -33,9 +33,13 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
     //    leaf as soon as the the visitor found it. So you create for that purpose a LazyDirector
     // ---------------------------------------------------------------------------------------------
 
-    public class FindLeavesDir 
+    public class FindLeavesDir : LazyDirector<NodeFamily, FindLeavesDir> 
     {
         private readonly StringBuilder mLog = new StringBuilder();
+
+        public FindLeavesDir(params ILazyVisitorClass<NodeFamily, FindLeavesDir>[] visitors) : base(visitors)
+        {
+        }
 
         public NodeFamily CurrentLeaf { get; set; }
 
@@ -53,14 +57,14 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
         : ILazyVisitor<NodeFamily, FindLeavesDir, NodeA>
         , ILazyVisitor<NodeFamily, FindLeavesDir, NodeB>
     {
-        public IEnumerable<Pause> Visit(ILazyDirector<NodeFamily, FindLeavesDir> director, NodeA node)
+        public IEnumerable<Pause> Visit(FindLeavesDir director, NodeA node)
         {
-            director.State.Log("... visiting node {0} (NodeA's visitor is speaking)", node.Name);
+            director.Log("... visiting node {0} (NodeA's visitor is speaking)", node.Name);
 
             // if leaf, then pause the visit
             if (node.Count == 0)
             {
-                director.State.CurrentLeaf = node;
+                director.CurrentLeaf = node;
                 yield return Pause.Now;
             }
 
@@ -70,13 +74,13 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
                     yield return pause;
         }
 
-        public IEnumerable<Pause> Visit(ILazyDirector<NodeFamily, FindLeavesDir> director, NodeB node)
+        public IEnumerable<Pause> Visit(FindLeavesDir director, NodeB node)
         {
-            director.State.Log("... visiting node {0} (NodeB's visitor is speaking)", node.Name);
+            director.Log("... visiting node {0} (NodeB's visitor is speaking)", node.Name);
  
             if (node.Count == 0)
             {
-                director.State.CurrentLeaf = node;
+                director.CurrentLeaf = node;
                 yield return Pause.Now;
             }
 
@@ -107,16 +111,15 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
             };
 
             
-            var director = new LazyDirector<NodeFamily, FindLeavesDir>(new FindLeavesVisitors());
-            director.State = new FindLeavesDir();
+            var director = new FindLeavesDir(new FindLeavesVisitors());
 
             IEnumerable<Pause> visitPauses = director.Visit(root);
 
-            director.State.Log("Starting processing leaves:");
+            director.Log("Starting processing leaves:");
             // ReSharper disable once UnusedVariable
             foreach (var pause in visitPauses)
             {
-                director.State.Log("PROCESSING node " + director.State.CurrentLeaf.Name);
+                director.Log("PROCESSING node " + director.CurrentLeaf.Name);
             }
 
             // Result in console:
@@ -128,7 +131,7 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
                             "... visiting node 4 (NodeB's visitor is speaking)\r\n" +
                             "PROCESSING node 4\r\n" +
                             "... visiting node 5 (NodeA's visitor is speaking)\r\n" +
-                            "PROCESSING node 5\r\n", director.State.GetDumpResult());
+                            "PROCESSING node 5\r\n", director.GetDumpResult());
 
         }
     }

@@ -24,15 +24,19 @@ namespace NVisitorTest.Api.Lazy
         {
         }
 
-        public class MyDir {}
+        public class MyDir : LazyDirector<INode, MyDir>
+        {
+            public MyDir(params ILazyVisitorClass<INode, MyDir>[] visitors) : base(visitors)
+            {
+            }
+        }
 
         [Test]
         public void TestNodeO()
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new LazyDirector<INode, MyDir>(mock1.Object, mock2.Object);
-            dir.State = new MyDir();
+            var dir = new MyDir(mock1.Object, mock2.Object);
 
             INode node = new MyNodeO();
             dir.Visit(node);
@@ -49,8 +53,7 @@ namespace NVisitorTest.Api.Lazy
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new LazyDirector<INode, MyDir>(mock1.Object, mock2.Object);
-            dir.State = new MyDir();
+            var dir = new MyDir(mock1.Object, mock2.Object);
 
             INode node = new Mock<INode>().Object;
             dir.Visit(node);
@@ -67,8 +70,7 @@ namespace NVisitorTest.Api.Lazy
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new LazyDirector<INode, MyDir>(mock1.Object, mock2.Object);
-            dir.State = new MyDir();
+            var dir = new MyDir(mock1.Object, mock2.Object);
 
             INode node = new MyNodeA();
             dir.Visit(node);
@@ -85,8 +87,7 @@ namespace NVisitorTest.Api.Lazy
         {
             var mock1 = new Mock<IMyVisitor1>();
             var mock2 = new Mock<IMyVisitor2>();
-            var dir = new LazyDirector<INode, MyDir>(mock1.Object, mock2.Object);
-            dir.State = new MyDir();
+            var dir = new MyDir(mock1.Object, mock2.Object);
 
             INode node = new MyNodeB();
             dir.Visit(node);

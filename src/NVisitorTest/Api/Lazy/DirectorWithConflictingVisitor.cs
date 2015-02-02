@@ -25,15 +25,19 @@ namespace NVisitorTest.Api.Lazy
         {
         }
 
-        public class MyDir {}
+        public class MyDir : LazyDirector<INode, MyDir>
+        {
+            public MyDir(params ILazyVisitorClass<INode, MyDir>[] visitors) : base(visitors)
+            {
+            }
+        }
 
         [Test]
         [ExpectedException(typeof(VisitorNotFoundException))]
         public void TestWithConflictingVisitor()
         {
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
-            var dir = new LazyDirector<INode, MyDir>(mockConflictingVisitor.Object);
-            dir.State = new MyDir();
+            var dir = new MyDir(mockConflictingVisitor.Object);
 
             INode node = new MyNode();
             dir.Visit(node);
@@ -44,8 +48,7 @@ namespace NVisitorTest.Api.Lazy
         {
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
             var mockSolvingVisitor = new Mock<ISolvingVisitor>();
-            var dir = new LazyDirector<INode, MyDir>(mockConflictingVisitor.Object, mockSolvingVisitor.Object);
-            dir.State = new MyDir();
+            var dir = new MyDir(mockConflictingVisitor.Object, mockSolvingVisitor.Object);
 
             INode node = new MyNode();
             dir.Visit(node);

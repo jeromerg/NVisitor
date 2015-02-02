@@ -25,14 +25,20 @@ namespace NVisitorTest.Api.Batch
         {
         }
 
-        public class MyDir {}
+        public class MyDir : Director<INode, MyDir>
+        {
+            public MyDir(params IVisitorClass<INode, MyDir>[] visitorArray)
+                : base(visitorArray)
+            {
+            }
+        }
 
         [Test]
         [ExpectedException(typeof(VisitorNotFoundException))]
         public void TestWithConflictingVisitor()
         {
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
-            var dir = new Director<INode, MyDir>(mockConflictingVisitor.Object);
+            var dir = new MyDir(mockConflictingVisitor.Object);
 
             INode node = new MyNode();
             dir.Visit(node);
@@ -43,7 +49,7 @@ namespace NVisitorTest.Api.Batch
         {
             var mockConflictingVisitor = new Mock<IConflictingVisitor>();
             var mockSolvingVisitor = new Mock<ISolvingVisitor>();
-            var dir = new Director<INode, MyDir>(mockConflictingVisitor.Object, mockSolvingVisitor.Object);
+            var dir = new MyDir(mockConflictingVisitor.Object, mockSolvingVisitor.Object);
 
             INode node = new MyNode();
             dir.Visit(node);

@@ -9,8 +9,8 @@ namespace NVisitor.Api.Batch
     /// <typeparam name="TDir">The director type</typeparam>
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] // GENERIC PARAMETERS STRICTLY IDENTIFY THE DIRECTOR
     public interface IDirector<TFamily, TDir> : IDirectorMarker
+        where TDir : IDirector<TFamily, TDir>
     {
-        TDir State { get; set; }
         void Visit([NotNull] TFamily node);
     }
 }

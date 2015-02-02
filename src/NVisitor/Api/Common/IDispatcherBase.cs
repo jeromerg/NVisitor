@@ -4,8 +4,8 @@ using NVisitor.Api.Marker;
 namespace NVisitor.Api.Common
 {
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] // GENERIC PARAMETERS STRICTLY CARACTERIZE THE DIRECTOR
-    public interface IDispatcherBase<TFamily, TGenericDirector, TResult> : IDispatcherMarker
+    public interface IDispatcherBase<TFamily, TDir, TResult> : IDispatcherMarker
     {
-        TResult Visit(TGenericDirector director, TFamily node);
+        TResult Visit(TDir director, TFamily node);
     }
 }

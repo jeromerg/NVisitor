@@ -12,8 +12,13 @@ namespace NVisitorTest.Api.Lazy
         public class NodeO : INode { }
         public class NodeA : INode { }
         public class NodeB : NodeA {}
-        
-        public class Dir { }
+
+        public class Dir : LazyDirector<INode, Dir>
+        {
+            public Dir(params ILazyVisitorClass<INode, Dir>[] visitors) : base(visitors)
+            {
+            }
+        }
 
         public IEnumerable<INode> TestCaseSource()
         {
@@ -27,7 +32,7 @@ namespace NVisitorTest.Api.Lazy
         [ExpectedException(typeof(VisitorNotFoundException))]
         public void Test(INode node)
         {
-            var dir = new LazyDirector<INode, Dir>();
+            var dir = new Dir();
             dir.Visit(node);
         }
     }

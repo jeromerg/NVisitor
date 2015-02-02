@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using NVisitor.Api.Batch;
 
@@ -18,9 +17,15 @@ namespace NVisitorTest.Api.Batch
         public class MyNodeO : INode {}
 
         /// <summary> Interface IDENTYING the dispatcher uniquely </summary>
-        public interface IMyDir {}
+        public interface IMyDir : IDirector<INode, IMyDir> { }
 
-        public class MyDir1 : IMyDir {}
+        public class MyDir1 : Director<INode, IMyDir>, IMyDir
+        {
+            public MyDir1(params IVisitorClass<INode, IMyDir>[] visitorArray)
+                : base(visitorArray)
+            {
+            }
+        }
 
         public interface IMyVisitor
             : IVisitor<INode, IMyDir, INode>
@@ -31,7 +36,7 @@ namespace NVisitorTest.Api.Batch
         public void AllRelatedToIMyDir_Test()
         {
             var mock = new Mock<IMyVisitor>();
-            var dir = new Director<INode, IMyDir>(Enumerable.Repeat<IVisitorClass<IMyDir>>(mock.Object, 1));
+            var dir = new MyDir1(mock.Object);
 
             MyNodeO node = new MyNodeO();
             
