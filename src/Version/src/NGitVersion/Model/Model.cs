@@ -30,18 +30,21 @@ namespace NGitVersion.Model
 #endif
         }
 
-        public string Company { get { return "jeromerg"; } }
-        public string Product { get { return "NVisitor"; } }
-        public string Copyright { get { return "Apache License Version 2.0"; } }
-        public string Major { get { return "1"; } }
-        public string Minor { get { return "0"; } }
-        public string Build { get { return "0"; } }
+        public string Company        { get { return "jeromerg"; } }
+        public string Product        { get { return "NVisitor"; } }
+        public string Copyright      { get { return "Apache License V2.0"; } }
+        public string Trademark      { get { return ""; } }
+        public string Culture        { get { return ""; } }
 
-        public string Revision { get { return mRevision.Value; } }
-        public string ShortHash { get { return mShortHash.Value; } }
-        public string Branch { get { return mBranch.Value; } }
+        public string Major          { get { return "1"; } } // TODO
+        public string Minor          { get { return "1"; } } // TODO
+        public string Build          { get { return "0"; } } // TODO
+
+        public string Revision       { get { return mRevision.Value; } }
+        public string ShortHash      { get { return mShortHash.Value; } }
+        public string Branch         { get { return mBranch.Value; } }
         public string HasLocalChange { get { return mHasLocalChange.Value; } }
-        public string BuildConfig { get { return mBuildConfig; } }
+        public string BuildConfig    { get { return mBuildConfig; } }
 
     }
 }

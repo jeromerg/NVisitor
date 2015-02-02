@@ -1,21 +1,63 @@
-﻿How to support git-incremental versioning for your VS Project
-=============================================================
+NGitVersion
+===========
 
-Prerequisite
-------------
+Auto-increment your DLL versions based on git history.
 
-- source code ist in local git repository
-- `git.exe` is in yout environment `PATH`
+Out-of-the-box *NGitVersion* populates your DLLs with the following versions:
 
-C# Project
-----------
+- Short: `1.0.0.752`, where `752` is the *Git* auto-incremented version
+- Long: `1.0.0.752, Hash b716d1b, BuildConfig DEBUG, HasLocalChange True`, where:
+    - `Hash` is the git "short hash" of the local checked-out commit 
+    - `BuildConfig` is the build configuration (`DEBUG` / `RELEASE`)
+    - `HasLocalChange` tells whether some file has been locally edited
 
-Steps to add versioning to a C# project:
+*NGitVersion* is only a few lines of code. You can easily:
 
-1. Add `NGitVersion` project to your `CSharp-project` references 
+- Edit the templates, that generate the assembly metadata
+- Edit the underlying model (edit major version, product name...)
+- Extend the underlying model (get environment info like OS, tool version, date)
+- Add more templates
+	-  i.e. commit-list file, patch-file of local changes 
 
-2. (optional) Edit your `CSharp.csproj` file manually and add following `ReferenceOutputAssembly` 
-   element to `NGitVersion` ProjectReference. Result should look like this:
+*NGitVersion* is based on the template engine [StringTemplate](https://github.com/antlr/stringtemplate4) and the git-client [LibGit2Sharp](https://github.com/libgit2/libgit2sharp). 
+
+Usage
+-----
+### 1) Get *NGitVersion*
+
+Clone [NGitVersion](https://github.com/jeromerg/NGitVersion) repository and copy its [/src/NGitVersion/](https://github.com/jeromerg/NGitVersion/blob/master/src/NGitVersion/) subfolder to your target solution folder.
+
+Alternatively, if you are confident with git subtree:
+```
+git subtree add --prefix my/target/folder https://github.com/jeromerg/NGitVersion master --squash
+```
+
+(update command)
+```
+git subtree pull --prefix my/target/folder https://github.com/jeromerg/NGitVersion master --squash
+```
+
+### 2) Add *NGitVersion* project to your Visual Studio solution
+
+Add the `/src/NGitVersion/NGitVersion.csproj` to your solution.
+
+### 3) Build
+
+Typical issue: `Antlr4.StringTemplate` and `LibGit2Sharp` are not found: Fix the path to *NuGet* `packages` folder in the `NGitVersion.csproj` file:
+		
+- Either search and fix `..\packages\` string within in the project file
+- Or remove/re-install nuget-dependencies `Antlr4.StringTemplate` and `LibGit2Sharp`
+
+The build generates files into the `src\NGitVersion\Generated\` folder. Check that they exist and are properly generated from the templates located in `src\NGitVersion\Templates\`.
+
+### Upgrade your projects
+
+Now you can upgrade your projects to support *Git* automatic DLL versioning.
+
+#### C# Project
+
+1. Add *NGitVersion* project as project reference
+2. Add manually the `ReferenceOutputAssembly` element to your `CSharp.csproj` (optional):
 
         <ProjectReference Include="..\..\NGitVersion\NGitVersion.csproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
@@ -23,76 +65,24 @@ Steps to add versioning to a C# project:
             <Name>NGitVersion</Name>
          </ProjectReference>
 
-   ... it ensures, that the `CSharp` assembly doesn't reference the `NGitVersion` assembly but 
-   only used at compile time.
+From [MSDN](https://msdn.microsoft.com/en-us/library/47w1hdab.aspx): *If true, the assembly is used on the compiler command line during the build.* ... We just reference the *NGitVersion* project to ensure the correct build-order, so we disable this functionality.
 
-3. "Add as Link" the `NGitVersion\Generated\GlobalAssemblyInfo.cs` file into the `CSharp` project
-  - Right-click on project in Solution Explorer
-  - Menu "Add>Existing Item..."
-  - Browse and select the file `NGitVersion\Generated\GlobalAssemblyInfo.cs`
-  - Do not click directly on "ADD BUTTON", but select "Add as Link" from the "Add Button ComboBox"
+3. Add file `src\NGitVersion\Generated\GlobalAssemblyInfo.cs` as a link (Add by using the *Add as link* button in *Add Existing Item* dialog)
+4. Remove conflicting entries from the existing project `AssemblyInfo.cs`.
+5. Build: Check that the built DLL contains the metadata defined in the generated `GlobalAssemblyInfo.cs` file.
 
-4. Build
-   - eventually, remove conflicting entries from the already existing `AssemblyInfo.cs` 
+#### Native and CLI C++ Project
+1. Add *NGitVersion* project as project reference
+   - Uncheck "Properties>Reference Assembly Output" in *Add Reference* dialog
+2. Copy and include following files into your project (eventually merge with existing):
+   - `NGitVersion\Resource\version.rc2` as *Resource Compiler*
+   - `NGitVersion\Resource\Assembly.cpp` (only for C++ CLI)
+    
+3. Fix all TODO in both files, in particular the relative path to the generated `src\NGitVersion\GlobalAssemblyInfo.h` file.
 
-5. Remark: DO NOT ADD ANY `GlobalAssemblyInfo.cs` file into source control repository!
+4. Build: Check that the built DLL contains the metadata defined in the generated `GlobalAssemblyInfo.h` file. 
 
-C++ CLI Project
----------------
+### Customize
 
-Steps to add versioning to a C++ CLI project (managed and unmanaged metadata):
-
-1. Add `NGitVersion` project to your `CppCli`-project references 
-   - Open project properties (Alt-Enter on project node in Solution Explorer)
-   - Menu Common Properties, then click Button "Add New Reference..."
-   - Browse and select the `NGitVersion` project
-   - Set related properties "Properties>Reference Assembly Output" to false
-
-2. Add pre-build copy command
-   - Open project properties (Alt-Enter on project node in Solution Explorer)
-   - don't forget to select "All Configurations"
-   - Menu "Configuration Properties>Build Events>Pre-Build Event", then add following command lines:
-
-        xcopy /Y "$(ProjectDir)..\..\NGitVersion\Generated\GlobalNativeAssemblyInfo.h" "$(ProjectDir)resource\"
-        xcopy /Y "$(ProjectDir)..\..\NGitVersion\Generated\GlobalAssemblyInfo.cpp" "$(ProjectDir)resource\"
-
-Remark: the reason why we copy the files and don't use links, is that the path to `stdafx.h` doesn't work with links
-
-3. Build, in order to copy the files to `CppCli-project\resource\`
-4. Include both files `GlobalNativeAssemblyInfo.h` and `GlobalAssemblyInfo.cpp` into the `CppCli`-project
-5. Re-build: this time the global assembly infos are taken into account.
-   - eventually, remove conflicting entries from the already existing `AssemblyInfo.cpp` (see warning output)
-
-6. Copy the file `NGitVersion\Resource\version.rc2` into the `CppCli-project\resource` folder
-7. Add the file `version.rc2` into the project. Set file property "Item Type" to *Resource Compiler*
-8. Edit the file to set project specific information like "File Description"
-9. Build and that's it!
-
-10. Remark: DO NOT ADD `GlobalNativeAssemblyInfo.h` and `GlobalAssemblyInfo.cpp` files into source control repository!
-
-Win32 C++ Project
-=================
-
-Step to add versioning to a Win32 C++ project (native metadata):
-
-1. Add `NGitVersion` project to your `CppNative`-project references 
-   - Open project properties (Alt-Enter on project node in Solution Explorer)
-   - Menu Common Properties, then click Button "Add New Reference..."
-   - Browse and select the NGitVersion project
-   - Set related properties "Properties>Reference Assembly Output" to false
-
-2. Add pre-build copy command
-   - Open project properties (Alt-Enter on project node in Solution Explorer)
-   - don't forget to select "All Configurations"
-   - Menu "Configuration Properties>Build Events>Pre-Build Event", then add following command line:
-
-        xcopy /Y "$(ProjectDir)..\..\NGitVersion\Generated\GlobalNativeAssemblyInfo.h" "$(ProjectDir)resource\"
-
-3. Build in order to copy the files to `CppNative\resource\`
-4. Include file `GlobalNativeAssemblyInfo.h` into the `CppNative` project
-5. Copy the file `NGitVersion\Resource\version.rc2` into the `CppNative\resource` folder
-6. Include the file `version.rc2` into the project. Set file property "Item Type" to *Resource Compiler*
-7. Edit the file to set project specific information like "File Description"
-8. Build and that's it!
-
-9. Remark: DO NOT ADD `GlobalNativeAssemblyInfo.h` file into source control repository!
+- Customize model file [/src/NGitVersion/Model/Model.cs](https://github.com/jeromerg/NGitVersion/blob/master/src/NGitVersion/Model/Model.cs) (major, minor, build versions, company name...)
+- Edit/Add templates in [/src/NGitVersion/Templates/](https://github.com/jeromerg/NGitVersion/blob/master/src/NGitVersion/Templates/)

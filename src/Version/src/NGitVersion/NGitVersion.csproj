@@ -51,7 +51,7 @@
     <Compile Include="NGitVersion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Resource\Readme.md" />
-    <None Include="Templates\GlobalNativeAssemblyInfo.h.stg" />
+    <None Include="Templates\GlobalAssemblyInfo.h.stg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -59,7 +59,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Templates\GlobalAssemblyInfo.cpp.stg" />
     <None Include="Templates\GlobalAssemblyInfo.cs.stg" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -71,6 +70,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Generated\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resource\Assembly.cpp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
