@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using NVisitor.Api.Common;
 
 namespace NVisitor.Api.Batch
 {
@@ -15,20 +14,20 @@ namespace NVisitor.Api.Batch
     public abstract class Director<TFamily, TDir> : IDirector<TFamily, TDir>
         where TDir : IDirector<TFamily, TDir>
     {
-        private readonly IDispatcherBase<TFamily, IDirector<TFamily, TDir>, object> mDispatcher;
+        private readonly IVisitMapper<TFamily,TDir> mVisitMapper;
 
-        /// <summary>Initializes a new dispatcher for a set of visitors</summary>
+        /// <summary>Initializes a new director for a set of visitors</summary>
         /// <param name="visitorEnumerable">list of visitors belonging to the same visitor class</param>
         protected Director(IEnumerable<IVisitorClass<TFamily, TDir>> visitorEnumerable)
         {
-            mDispatcher = new Dispatcher<TFamily, TDir>(visitorEnumerable);
+            mVisitMapper = new VisitMapper<TFamily, TDir>(visitorEnumerable);
         }
 
-        /// <summary>Initializes a new dispatcher with a shared Engine</summary>
-        /// <param name="dispatcher">shared dispatcher for all directors of this type</param>
-        protected Director(IDispatcher<TFamily, TDir> dispatcher)
+        /// <summary>Initializes a new director with a shared visitMapper</summary>
+        /// <param name="visitMapper">shared visitMapper for all directors of this type</param>
+        protected Director(IVisitMapper<TFamily, TDir> visitMapper)
         {
-            mDispatcher = dispatcher;
+            mVisitMapper = visitMapper;
         }
 
         /// <summary>Dispatches the call to the best visitor depending on the node's type</summary>
@@ -38,7 +37,9 @@ namespace NVisitor.Api.Batch
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            mDispatcher.Visit(this, node);
+            Action<IDirector<TFamily, TDir>, TFamily> visitAction = mVisitMapper.GetVisitDelegate(node);
+
+            visitAction(this, node);
         }
     }
 }

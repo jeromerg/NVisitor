@@ -40,12 +40,13 @@
     </Compile>
     <Compile Include="Api\Batch\Director.cs" />
     <Compile Include="Api\Batch\IDirector.cs" />
-    <Compile Include="Api\Batch\IDispatcher.cs" />
+    <Compile Include="Api\Batch\IVisitMapper.cs" />
     <Compile Include="Api\Batch\IVisitor.cs" />
-    <Compile Include="Api\Batch\Dispatcher.cs" />
-    <Compile Include="Api\Common\DispatcherBase.cs" />
-    <Compile Include="Api\Lazy\LazyDispatcher.cs" />
-    <Compile Include="Api\Marker\IDispatcherMarker.cs" />
+    <Compile Include="Api\Batch\VisitMapper.cs" />
+    <Compile Include="Api\Common\VisitMapperBase.cs" />
+    <Compile Include="Api\Lazy\ILazyVisitMapper.cs" />
+    <Compile Include="Api\Lazy\LazyVisitMapper.cs" />
+    <Compile Include="Api\Marker\IVisitMapperMarker.cs" />
     <Compile Include="Api\Lazy\LazyDirector.cs" />
     <Compile Include="Api\Lazy\ILazyDirector.cs" />
     <Compile Include="Api\Lazy\ILazyVisitorClass.cs" />
@@ -56,7 +57,7 @@
     <Compile Include="Api\Marker\IVisitorMarker.cs" />
     <Compile Include="Api\VisitorConflictException.cs" />
     <Compile Include="Api\VisitorNotFoundException.cs" />
-    <Compile Include="Api\Common\IDispatcherBase.cs" />
+    <Compile Include="Api\Common\IVisitMapperBase.cs" />
     <Compile Include="Common\VisitorCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Quality\ResharperAnnotations.cs" />

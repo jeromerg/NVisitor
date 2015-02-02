@@ -129,7 +129,12 @@ namespace NVisitorTest.Api.Demo.Batch
                 new NodeA()
             };
 
+<<<<<<< HEAD
             var dumpDirector = new DumpDir(new DumpVisitors(), new VisitorForNodeC()); // NEW!!! Updated injected visitors
+=======
+            var dumpDirector = new Director<NodeFamily, DumpDir>(new DumpVisitors(), new VisitorForNodeC()); // NEW!!! Updated injected visitors
+            dumpDirector.State = new DumpDir(); 
+>>>>>>> 5b367e8563679899b51f8ece834efee3fa6c9405
 
             dumpDirector.Visit(root);
 
