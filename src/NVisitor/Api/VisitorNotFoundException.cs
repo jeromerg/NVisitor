@@ -23,7 +23,7 @@ namespace NVisitor.Api
             var b = new StringBuilder();
             
             b.AppendFormat("{0}: No visitor found for node type {1}. Candidates are:\n", 
-                           directorType.Name, exception.Type.Name);
+                           directorType.FullName, exception.Type.FullName);
 
             foreach (var candidateInfo in exception.CandidateInfos)
                 b.AppendFormat("\t{0}: {1}\n", candidateInfo.Type, candidateInfo.Status);
