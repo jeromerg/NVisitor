@@ -7,20 +7,27 @@ namespace NVisitor.Api
     [Serializable]
     public class VisitorNotFoundException : Exception
     {
-        internal VisitorNotFoundException(TargetTypeNotResolvedException exception)
-            : base(BuildMessage(exception), exception)
+        internal VisitorNotFoundException(Type directorType, TargetTypeNotResolvedException exception)
+            : base(BuildMessage(directorType, exception), exception)
         {
         }
 
-        private static string BuildMessage(TargetTypeNotResolvedException exception)
+        private static string BuildMessage(Type directorType, TargetTypeNotResolvedException exception)
         {
             if (exception.CandidateInfos.Count == 0)
-                return string.Format("No visitor found for type {0}. Director has no visitor defined", exception.Type.Name);
+            {
+                return string.Format("{0}: No visitor found for node type {1}. Director has no visitor defined", 
+                    directorType.Name, exception.Type.Name);
+            }
 
             var b = new StringBuilder();
-            b.AppendFormat("No visitor found for type {0}. Candidates are:\n", exception.Type.Name);
+            
+            b.AppendFormat("{0}: No visitor found for node type {1}. Candidates are:\n", 
+                           directorType.Name, exception.Type.Name);
+
             foreach (var candidateInfo in exception.CandidateInfos)
-                b.AppendFormat("{0}: {1}\n", candidateInfo.Type, candidateInfo.Status);
+                b.AppendFormat("\t{0}: {1}\n", candidateInfo.Type, candidateInfo.Status);
+
             return b.ToString();
         }
     }

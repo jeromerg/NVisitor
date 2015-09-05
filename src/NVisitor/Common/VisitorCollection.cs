@@ -49,15 +49,8 @@ namespace NVisitor.Common
             if (ReferenceEquals(nodeType, null))
                 throw new ArgumentNullException("nodeType");
 
-            try
-            {
-                var typeTopology = new TypeTopology(nodeType);
-                visitorNodeType = typeTopology.ResolveBestUnambiguousTargetType(new HashSet<Type>(mNodeTypeToVisitorMapping.Keys));
-            }
-            catch (TargetTypeNotResolvedException e)
-            {
-                throw new VisitorNotFoundException(e);
-            }
+            var typeTopology = new TypeTopology(nodeType);
+            visitorNodeType = typeTopology.ResolveBestUnambiguousTargetType(new HashSet<Type>(mNodeTypeToVisitorMapping.Keys));
 
             return mNodeTypeToVisitorMapping[visitorNodeType];            
         }

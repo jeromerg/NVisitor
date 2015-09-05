@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NVisitor.Common.Topo;
 
 namespace NVisitor.Api.Lazy
 {
@@ -44,7 +45,15 @@ namespace NVisitor.Api.Lazy
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            Func<ILazyDirector<TFamily, TDir>, TFamily, IEnumerable<Pause>> visitFunction = mCache.GetVisitDelegate(node);
+            Func<ILazyDirector<TFamily, TDir>, TFamily, IEnumerable<Pause>> visitFunction;
+            try
+            {
+                visitFunction = mCache.GetVisitDelegate(node);
+            }
+            catch (TargetTypeNotResolvedException e)
+            {
+                throw new VisitorNotFoundException(GetType(), e);
+            }
 
             return visitFunction(this, node);
         }

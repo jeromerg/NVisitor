@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NVisitor.Common.Topo;
 
 namespace NVisitor.Api.Batch
 {
@@ -37,8 +38,15 @@ namespace NVisitor.Api.Batch
             if (ReferenceEquals(node, null))
                 throw new ArgumentNullException("node");
 
-            Action<IDirector<TFamily, TDir>, TFamily> visitAction = mVisitMapper.GetVisitDelegate(node);
-
+            Action<IDirector<TFamily, TDir>, TFamily> visitAction;
+            try
+            {
+                visitAction = mVisitMapper.GetVisitDelegate(node);
+            }
+            catch (TargetTypeNotResolvedException e)
+            {
+                throw new VisitorNotFoundException(GetType(), e);
+            }
             visitAction(this, node);
         }
     }
