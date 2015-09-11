@@ -1,6 +1,6 @@
 Status:
 
-[![Build status](https://ci.appveyor.com/api/projects/status/tar7i4r9wbj1s36d/branch/master?svg=true)](https://ci.appveyor.com/project/jeromerg/nvisitor/branch/master)  [![NuGet](https://img.shields.io/nuget/dt/NVisitor.svg)]()
+[![Build status](https://ci.appveyor.com/api/projects/status/tar7i4r9wbj1s36d/branch/master?svg=true)](https://ci.appveyor.com/project/jeromerg/nvisitor/branch/master)  [![NuGet](https://img.shields.io/nuget/dt/NVisitor.svg)](https://www.nuget.org/packages/NVisitor/)
 
 NVisitor
 ========
