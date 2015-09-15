@@ -5,7 +5,7 @@ Status:
 NVisitor
 ========
 
-Lightweight Framework to develop modular extendable visitors
+Framework to develop modular extendable visitors
 
 With NVisitor, you
 - Define visitors for a class family without renouncing to extend the family itself
@@ -15,6 +15,22 @@ With NVisitor, you
 NVisitor is entirely type-safe even if it performs lookup by reflection to perform visitor dispatching.
 
 See the initial problem solved by *NVisitor*: [nvisitor-released](https://jeromerg.github.io/blog/2015/01/06/nvisitor-released/).
+
+NVisitor is at the core of the test case generator [NCase](https://github.com/jeromerg/NCase). 
+
+Supported type of visitors
+--------------------------
+
+Name                            | Visit Signature
+--------------------------------|-------------------
+ActionVisitor					| `void Visit(Node node)`
+FuncVisitor						| `TResult Visit(Node node)`
+FuncPayloadVisitor				| `TResult Visit(Node node, TPayload payload)`
+ActionPairVisitor				| `void Visit(Car c, Driver d)`
+FuncPairVisitor					| `TResult Visit(Car c, Driver d)`
+FuncPayloadPairVisitor			| `TResult Visit(Car c, Driver d, TPayload payload)`
+LazyVisitor						| `IEnumerable<Pause> Visit(Node node)`
+
 
 Installation
 ------------
@@ -33,7 +49,7 @@ Usage
 
 See demo-unit-tests: 
 
-- Batch visitor: [http://github.com/jeromerg/NVisitor/blob/master/src/NVisitorTest/Api/Demo/BatchVisitorDemo.cs](http://github.com/jeromerg/NVisitor/blob/master/src/NVisitorTest/Api/Demo/BatchVisitorDemo.cs)
+- Action visitor: [http://github.com/jeromerg/NVisitor/blob/master/src/NVisitorTest/Api/Demo/ActionVisitorDemo.cs](http://github.com/jeromerg/NVisitor/blob/master/src/NVisitorTest/Api/Demo/ActionVisitorDemo.cs)
 
 - Lazy visitor: [http://github.com/jeromerg/NVisitor/blob/master/src/NVisitorTest/Api/Demo/LazyVisitorDemo.cs](http://github.com/jeromerg/NVisitor/blob/master/src/NVisitorTest/Api/Demo/LazyVisitorDemo.cs)
 
