@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\FuncPair\FuncPayloadPairTest.cs" />
+    <Compile Include="Api\ActionPayload\ActionPayloadTest.cs" />
+    <Compile Include="Api\ActionPayloadPair\FuncPayloadPairTest.cs" />
     <Compile Include="Api\Func\FuncPayloadTest.cs" />
     <Compile Include="Api\FuncPayloadPair\FuncPayloadPairTest.cs" />
     <Compile Include="Api\FuncPayload\FuncPayloadTest.cs" />

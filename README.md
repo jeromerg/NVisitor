@@ -24,9 +24,11 @@ Supported type of visitors
 Name                            | Visit Signature
 --------------------------------|-------------------
 ActionVisitor					| `void Visit(Node node)`
+ActionPayloadVisitor			| `void Visit(Node node, TPayload payload)`
 FuncVisitor						| `TResult Visit(Node node)`
 FuncPayloadVisitor				| `TResult Visit(Node node, TPayload payload)`
 ActionPairVisitor				| `void Visit(Car c, Driver d)`
+ActionPairPayloadVisitor		| `void Visit(Car c, Driver d, TPayload payload)`
 FuncPairVisitor					| `TResult Visit(Car c, Driver d)`
 FuncPayloadPairVisitor			| `TResult Visit(Car c, Driver d, TPayload payload)`
 LazyVisitor						| `IEnumerable<Pause> Visit(Node node)`
