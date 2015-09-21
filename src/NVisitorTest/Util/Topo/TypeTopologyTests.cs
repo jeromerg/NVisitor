@@ -22,6 +22,12 @@ namespace NVisitorTest.Util.Topo
         public class C : IC1, IC2 { }
         // ReSharper restore InconsistentNaming
 
+        public interface ICovariant<out T> { }
+        public class Covariant<T> : ICovariant<T> { }
+
+        public interface IContravariant<in T> { }
+        public class Contravariant<T> : IContravariant<T> { }
+
         [Test]
         public void TestO()
         {
@@ -86,6 +92,26 @@ namespace NVisitorTest.Util.Topo
             Assert.AreEqual(typeof(C), result);
         }
 
+
+        [Test(Description = "Covariant generic types not supported yet")]
+        [ExpectedException(typeof(TargetTypeNotResolvedException))]
+        public void TestCovariance()
+        {
+            var topo = new TypeTopology(typeof(Covariant<B>));
+            Type result = topo.ResolveBestUnambiguousTargetType(new HashSet<Type> { typeof(ICovariant<A>) });
+
+            Assert.AreEqual(typeof(ICovariant<A>), result);
+        }
+
+        [Test(Description = "Contravariant generic types not supported yet")]
+        [ExpectedException(typeof(TargetTypeNotResolvedException))]
+        public void TestContravariant()
+        {
+            var topo = new TypeTopology(typeof(Covariant<A>));
+            Type result = topo.ResolveBestUnambiguousTargetType(new HashSet<Type> { typeof(ICovariant<B>) });
+
+            Assert.AreEqual(typeof(ICovariant<A>), result);
+        }
 
     }
 }
