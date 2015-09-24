@@ -5,16 +5,16 @@ using NVisitor.Common.Topo;
 namespace NVisitor.Api.ActionPayloadPair
 {
     /// <summary>
-    /// A Director 
-    /// 1) Is the entry-point for a visit
-    /// 2) Dispatches visit to the best visitor
-    /// 3) Holds the state of the visit via its property State
+    ///     A Director
+    ///     1) Is the entry-point for a visit
+    ///     2) Dispatches visit to the best visitor
+    ///     3) Holds the state of the visit via its property State
     /// </summary>
     /// <typeparam name="TFamily1">The node1 family type</typeparam>
     /// <typeparam name="TFamily2">The node2 family type</typeparam>
     /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
     /// <typeparam name="TPayload">Payload passed to visitor</typeparam>
-    public abstract class ActionPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload> 
+    public abstract class ActionPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload>
         : IActionPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload>
         where TDir : IActionPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload>
     {
@@ -22,7 +22,8 @@ namespace NVisitor.Api.ActionPayloadPair
 
         /// <summary>Initializes a new director for a set of visitors</summary>
         /// <param name="visitorEnumerable">list of visitors belonging to the same visitor class</param>
-        protected ActionPayloadPairDirector(IEnumerable<IActionPayloadPairVisitorClass<TFamily1, TFamily2, TDir, TPayload>> visitorEnumerable)
+        protected ActionPayloadPairDirector(
+            IEnumerable<IActionPayloadPairVisitorClass<TFamily1, TFamily2, TDir, TPayload>> visitorEnumerable)
         {
             mVisitMapper = new ActionPayloadPairVisitMapper<TFamily1, TFamily2, TDir, TPayload>(visitorEnumerable);
         }
@@ -54,7 +55,7 @@ namespace NVisitor.Api.ActionPayloadPair
             {
                 throw new VisitorNotFoundException(GetType(), e);
             }
-            
+
             visitAction(this, node1, node2, payload);
         }
     }

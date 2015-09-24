@@ -5,15 +5,15 @@ using NVisitor.Common.Topo;
 namespace NVisitor.Api.FuncPair
 {
     /// <summary>
-    /// A Director 
-    /// 1) Is the entry-point for a visit
-    /// 2) Dispatches visit to the best visitor
-    /// 3) Holds the state of the visit via its property State
+    ///     A Director
+    ///     1) Is the entry-point for a visit
+    ///     2) Dispatches visit to the best visitor
+    ///     3) Holds the state of the visit via its property State
     /// </summary>
     /// <typeparam name="TFamily1">The node1 family type</typeparam>
     /// <typeparam name="TFamily2">The node2 family type</typeparam>
     /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
-    public abstract class FuncPairDirector<TFamily1, TFamily2, TDir, TResult> 
+    public abstract class FuncPairDirector<TFamily1, TFamily2, TDir, TResult>
         : IFuncPairDirector<TFamily1, TFamily2, TDir, TResult>
         where TDir : IFuncPairDirector<TFamily1, TFamily2, TDir, TResult>
     {

@@ -7,16 +7,27 @@ namespace NVisitorTest.Api.Action
     [TestFixture]
     public class DirectorWithSingleCompleteVisitorTest
     {
-        public interface INode {}
-        public class MyNodeO : INode { }
-        public class MyNodeA : INode { }
-        public class MyNodeB : MyNodeA {}
+        public interface INode
+        {
+        }
+
+        public class MyNodeO : INode
+        {
+        }
+
+        public class MyNodeA : INode
+        {
+        }
+
+        public class MyNodeB : MyNodeA
+        {
+        }
 
         public interface IMyVisitor
-            : IActionVisitor<INode, MyDir, INode>
-            , IActionVisitor<INode, MyDir, MyNodeO>
-            , IActionVisitor<INode, MyDir, MyNodeA>
-            , IActionVisitor<INode, MyDir, MyNodeB>
+            : IActionVisitor<INode, MyDir, INode>,
+              IActionVisitor<INode, MyDir, MyNodeO>,
+              IActionVisitor<INode, MyDir, MyNodeA>,
+              IActionVisitor<INode, MyDir, MyNodeB>
         {
         }
 
@@ -26,22 +37,6 @@ namespace NVisitorTest.Api.Action
                 : base(visitorArray)
             {
             }
-        }
-
-        [Test]
-        public void TestNodeO()
-        {
-            var mock = new Mock<IMyVisitor>();
-
-            MyDir dir = new MyDir(mock.Object);
-
-            INode node = new MyNodeO();
-            dir.Visit(node);
-
-            mock.Verify(v => v.Visit(dir, It.Is<MyNodeO>(n => n == node)), Times.Once);
-            mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
-            mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
-            mock.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
         }
 
         [Test]
@@ -87,6 +82,22 @@ namespace NVisitorTest.Api.Action
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
             mock.Verify(v => v.Visit(dir, It.Is<INode>(n => n == node)), Times.Once);
+        }
+
+        [Test]
+        public void TestNodeO()
+        {
+            var mock = new Mock<IMyVisitor>();
+
+            var dir = new MyDir(mock.Object);
+
+            INode node = new MyNodeO();
+            dir.Visit(node);
+
+            mock.Verify(v => v.Visit(dir, It.Is<MyNodeO>(n => n == node)), Times.Once);
+            mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeA>()), Times.Never);
+            mock.Verify(v => v.Visit(dir, It.IsAny<MyNodeB>()), Times.Never);
+            mock.Verify(v => v.Visit(dir, It.IsAny<INode>()), Times.Never);
         }
     }
 }

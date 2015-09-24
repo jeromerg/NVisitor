@@ -16,16 +16,18 @@ namespace NVisitor.Api
         {
             if (exception.CandidateInfos.Count == 0)
             {
-                return string.Format("{0}: No visitor found for node type {1}. Director has no visitor defined", 
-                    directorType.Name, exception.Type.Name);
+                return string.Format("{0}: No visitor found for node type {1}. Director has no visitor defined",
+                                     directorType.Name,
+                                     exception.Type.Name);
             }
 
             var b = new StringBuilder();
-            
-            b.AppendFormat("{0}: No visitor found for node type {1}. Candidates are:\n", 
-                           directorType.FullName, exception.Type.FullName);
 
-            foreach (var candidateInfo in exception.CandidateInfos)
+            b.AppendFormat("{0}: No visitor found for node type {1}. Candidates are:\n",
+                           directorType.FullName,
+                           exception.Type.FullName);
+
+            foreach (TargetTypeInfo candidateInfo in exception.CandidateInfos)
                 b.AppendFormat("\t{0}: {1}\n", candidateInfo.Type, candidateInfo.Status);
 
             return b.ToString();

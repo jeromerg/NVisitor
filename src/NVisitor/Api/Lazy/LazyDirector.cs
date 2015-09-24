@@ -5,14 +5,14 @@ using NVisitor.Common.Topo;
 namespace NVisitor.Api.Lazy
 {
     /// <summary>
-    /// A Director 
-    /// 1) Is the entry-point for a visit
-    /// 2) Dispatches visit to the best visitor
-    /// 3) Holds the state of the visit via its property State
+    ///     A Director
+    ///     1) Is the entry-point for a visit
+    ///     2) Dispatches visit to the best visitor
+    ///     3) Holds the state of the visit via its property State
     /// </summary>
     /// <typeparam name="TFamily">The node family type</typeparam>
     /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
-    public abstract class LazyDirector<TFamily, TDir> : ILazyDirector<TFamily, TDir> 
+    public abstract class LazyDirector<TFamily, TDir> : ILazyDirector<TFamily, TDir>
         where TDir : ILazyDirector<TFamily, TDir>
     {
         private readonly ILazyVisitMapper<TFamily, TDir> mCache;
@@ -57,6 +57,5 @@ namespace NVisitor.Api.Lazy
 
             return visitFunction(this, node);
         }
-
     }
 }

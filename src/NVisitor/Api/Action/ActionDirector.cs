@@ -5,17 +5,17 @@ using NVisitor.Common.Topo;
 namespace NVisitor.Api.Action
 {
     /// <summary>
-    /// A Director 
-    /// 1) Is the entry-point for a visit
-    /// 2) Dispatches visit to the best visitor
-    /// 3) Holds the state of the visit via its property State
+    ///     A Director
+    ///     1) Is the entry-point for a visit
+    ///     2) Dispatches visit to the best visitor
+    ///     3) Holds the state of the visit via its property State
     /// </summary>
     /// <typeparam name="TFamily">The node family type</typeparam>
     /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
     public abstract class ActionDirector<TFamily, TDir> : IActionDirector<TFamily, TDir>
         where TDir : IActionDirector<TFamily, TDir>
     {
-        private readonly IActionVisitMapper<TFamily,TDir> mVisitMapper;
+        private readonly IActionVisitMapper<TFamily, TDir> mVisitMapper;
 
         /// <summary>Initializes a new director for a set of visitors</summary>
         /// <param name="visitorEnumerable">list of visitors belonging to the same visitor class</param>

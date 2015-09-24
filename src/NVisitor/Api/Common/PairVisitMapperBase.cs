@@ -15,9 +15,15 @@ namespace NVisitor.Api.Common
         private readonly PairVisitorCollection<TVisitorClass> mVisitorCollection;
         private readonly Dictionary<Tuple<Type, Type>, TVisitDelegate> mVisitCacheByNodeType;
 
-        protected PairVisitMapperBase(IEnumerable<TVisitorClass> visitors, Type visitorGenericOpenType, int node1TypeIndex, int node2TypeIndex)
+        protected PairVisitMapperBase(IEnumerable<TVisitorClass> visitors,
+                                      Type visitorGenericOpenType,
+                                      int node1TypeIndex,
+                                      int node2TypeIndex)
         {
-            mVisitorCollection = new PairVisitorCollection<TVisitorClass>(visitors, visitorGenericOpenType, node1TypeIndex, node2TypeIndex);
+            mVisitorCollection = new PairVisitorCollection<TVisitorClass>(visitors,
+                                                                          visitorGenericOpenType,
+                                                                          node1TypeIndex,
+                                                                          node2TypeIndex);
             mVisitCacheByNodeType = new Dictionary<Tuple<Type, Type>, TVisitDelegate>();
         }
 
@@ -36,7 +42,10 @@ namespace NVisitor.Api.Common
                 // get the visitor instance and the node-type of the visitor
                 Type visitorNode1Type;
                 Type visitorNode2Type;
-                TVisitorClass visitor = mVisitorCollection.FindNearestVisitor(node1.GetType(), node2.GetType(), out visitorNode1Type, out visitorNode2Type);
+                TVisitorClass visitor = mVisitorCollection.FindNearestVisitor(node1.GetType(),
+                                                                              node2.GetType(),
+                                                                              out visitorNode1Type,
+                                                                              out visitorNode2Type);
 
                 directorDelegate = CreateVisitDelegate(node1, node2, visitorNode1Type, visitorNode2Type, visitor, directorDelegate);
                 mVisitCacheByNodeType.Add(nodeTypesTuple, directorDelegate);
@@ -47,11 +56,11 @@ namespace NVisitor.Api.Common
 
         /// <summary>Factory to implement in concrete implementations</summary>
         protected abstract TVisitDelegate CreateVisitDelegate(
-            TFamily1 node1, 
-            TFamily2 node2, 
-            Type visitorNode1Type, 
-            Type visitorNode2Type, 
-            TVisitorClass visitorInstance, 
+            TFamily1 node1,
+            TFamily2 node2,
+            Type visitorNode1Type,
+            Type visitorNode2Type,
+            TVisitorClass visitorInstance,
             TVisitDelegate directorDelegate);
     }
 }

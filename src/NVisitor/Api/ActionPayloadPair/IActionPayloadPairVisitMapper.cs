@@ -11,7 +11,7 @@ namespace NVisitor.Api.ActionPayloadPair
     public interface IActionPayloadPairVisitMapper<TFamily1, TFamily2, TDir, TPayload> : IVisitMapperMarker
         where TDir : IActionPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload>
     {
-        Action<IActionPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload>, TFamily1, TFamily2, TPayload>     
+        Action<IActionPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload>, TFamily1, TFamily2, TPayload>
             GetVisitDelegate(TFamily1 node1, TFamily2 node2);
     }
 }

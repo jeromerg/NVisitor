@@ -5,18 +5,20 @@ using NVisitor.Common.Topo;
 namespace NVisitor.Api.FuncPayload
 {
     /// <summary>
-    /// A Director for visitor having a payload argument and a return value (function).
-    /// This type of visitor is especially useful if you want to process concurrently a node family: With the payload and the return-value, you 
-    /// avoid the problem of shared resources in concurrent environment.
-    /// 1) Is the entry-point for a visit
-    /// 2) Dispatches visit to the best visitor
-    /// 3) Holds the state of the visit via its property State
+    ///     A Director for visitor having a payload argument and a return value (function).
+    ///     This type of visitor is especially useful if you want to process concurrently a node family: With the payload and
+    ///     the return-value, you
+    ///     avoid the problem of shared resources in concurrent environment.
+    ///     1) Is the entry-point for a visit
+    ///     2) Dispatches visit to the best visitor
+    ///     3) Holds the state of the visit via its property State
     /// </summary>
     /// <typeparam name="TFamily">The node family type</typeparam>
     /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
     /// <typeparam name="TResult">Result of the Visit call</typeparam>
     /// <typeparam name="TPayload">Payload for the visit call</typeparam>
-    public abstract class FuncPayloadDirector<TFamily, TDir, TPayload, TResult> : IFuncPayloadDirector<TFamily, TDir, TPayload, TResult>
+    public abstract class FuncPayloadDirector<TFamily, TDir, TPayload, TResult>
+        : IFuncPayloadDirector<TFamily, TDir, TPayload, TResult>
         where TDir : IFuncPayloadDirector<TFamily, TDir, TPayload, TResult>
     {
         private readonly IFuncPayloadVisitMapper<TFamily, TDir, TPayload, TResult> mVisitMapper;

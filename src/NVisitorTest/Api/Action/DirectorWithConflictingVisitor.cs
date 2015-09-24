@@ -8,15 +8,26 @@ namespace NVisitorTest.Api.Action
     [TestFixture]
     public class DirectorWithConflictingVisitor
     {
-        public interface INode {}
-        public interface INode1 : INode { }
-        public interface INode2 : INode { }
-        public class MyNode : INode1, INode2 { }
+        public interface INode
+        {
+        }
+
+        public interface INode1 : INode
+        {
+        }
+
+        public interface INode2 : INode
+        {
+        }
+
+        public class MyNode : INode1, INode2
+        {
+        }
 
         public interface IConflictingVisitor
-            : IActionVisitor<INode, MyDir, INode>
-            , IActionVisitor<INode, MyDir, INode1>
-            , IActionVisitor<INode, MyDir, INode2>
+            : IActionVisitor<INode, MyDir, INode>,
+              IActionVisitor<INode, MyDir, INode1>,
+              IActionVisitor<INode, MyDir, INode2>
         {
         }
 
@@ -31,17 +42,6 @@ namespace NVisitorTest.Api.Action
                 : base(visitorArray)
             {
             }
-        }
-
-        [Test]
-        [ExpectedException(typeof(VisitorNotFoundException))]
-        public void TestWithConflictingVisitor()
-        {
-            var mockConflictingVisitor = new Mock<IConflictingVisitor>();
-            var dir = new MyDir(mockConflictingVisitor.Object);
-
-            INode node = new MyNode();
-            dir.Visit(node);
         }
 
         [Test]
@@ -60,5 +60,15 @@ namespace NVisitorTest.Api.Action
             mockSolvingVisitor.Verify(v => v.Visit(dir, It.Is<MyNode>(n => n == node)), Times.Once);
         }
 
+        [Test]
+        [ExpectedException(typeof (VisitorNotFoundException))]
+        public void TestWithConflictingVisitor()
+        {
+            var mockConflictingVisitor = new Mock<IConflictingVisitor>();
+            var dir = new MyDir(mockConflictingVisitor.Object);
+
+            INode node = new MyNode();
+            dir.Visit(node);
+        }
     }
 }

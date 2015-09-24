@@ -40,6 +40,9 @@ namespace NVisitor.Api.Common
         }
 
         /// <summary>Factory to implement in concrete implementations</summary>
-        protected abstract TVisitDelegate CreateVisitDelegate(TFamily node, Type visitorNodeType, TVisitorClass visitorInstance, TVisitDelegate directorDelegate);
+        protected abstract TVisitDelegate CreateVisitDelegate(TFamily node,
+                                                              Type visitorNodeType,
+                                                              TVisitorClass visitorInstance,
+                                                              TVisitDelegate directorDelegate);
     }
 }

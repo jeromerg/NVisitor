@@ -5,12 +5,13 @@ using NVisitor.Common.Topo;
 namespace NVisitor.Api.ActionPayload
 {
     /// <summary>
-    /// A Director for visitor having a payload argument.
-    /// This type of visitor is especially useful if you want to process concurrently a node family: With the payload and the return-value, you 
-    /// avoid the problem of shared resources in concurrent environment.
-    /// 1) Is the entry-point for a visit
-    /// 2) Dispatches visit to the best visitor
-    /// 3) Holds the state of the visit via its property State
+    ///     A Director for visitor having a payload argument.
+    ///     This type of visitor is especially useful if you want to process concurrently a node family: With the payload and
+    ///     the return-value, you
+    ///     avoid the problem of shared resources in concurrent environment.
+    ///     1) Is the entry-point for a visit
+    ///     2) Dispatches visit to the best visitor
+    ///     3) Holds the state of the visit via its property State
     /// </summary>
     /// <typeparam name="TFamily">The node family type</typeparam>
     /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
@@ -51,7 +52,7 @@ namespace NVisitor.Api.ActionPayload
             {
                 throw new VisitorNotFoundException(GetType(), e);
             }
-            
+
             visitAction(this, node, payload);
         }
     }

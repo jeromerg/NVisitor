@@ -8,7 +8,7 @@ namespace NVisitor.Api.ActionPayload
     /// <typeparam name="TNode">The concrete node type supported by the visitor</typeparam>
     /// <typeparam name="TPayload">Payload for the visit call</typeparam>
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] // GENERIC PARAMETERS STRICTLY CARACTERIZE THE VISITOR
-    public interface IActionPayloadVisitor<TFamily, TDir, TNode, TPayload> : IActionPayloadVisitorClass<TFamily, TDir, TPayload> 
+    public interface IActionPayloadVisitor<TFamily, TDir, TNode, TPayload> : IActionPayloadVisitorClass<TFamily, TDir, TPayload>
         where TNode : TFamily
         where TDir : IActionPayloadDirector<TFamily, TDir, TPayload>
     {

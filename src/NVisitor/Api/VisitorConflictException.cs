@@ -8,11 +8,13 @@ namespace NVisitor.Api
     public class VisitorConflictException : Exception
     {
         [StringFormatMethod("format")]
-        public VisitorConflictException(string format, params object[] args) : base(string.Format(format, args))
+        public VisitorConflictException(string format, params object[] args)
+            : base(string.Format(format, args))
         {
         }
 
-        protected VisitorConflictException([NotNull] SerializationInfo info, StreamingContext context) : base(info, context)
+        protected VisitorConflictException([NotNull] SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }

@@ -10,7 +10,7 @@ namespace NVisitor.Api.FuncPair
     public interface IFuncPairVisitMapper<TFamily1, TFamily2, TDir, TResult> : IVisitMapperMarker
         where TDir : IFuncPairDirector<TFamily1, TFamily2, TDir, TResult>
     {
-        Func<IFuncPairDirector<TFamily1, TFamily2, TDir, TResult>, TFamily1, TFamily2, TResult>     
+        Func<IFuncPairDirector<TFamily1, TFamily2, TDir, TResult>, TFamily1, TFamily2, TResult>
             GetVisitDelegate(TFamily1 node1, TFamily2 node2);
     }
 }

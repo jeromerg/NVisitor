@@ -10,8 +10,8 @@ namespace NVisitor.Api.ActionPayloadPair
     /// <typeparam name="TNode2">The concrete node2 type supported by the visitor</typeparam>
     /// <typeparam name="TPayload">Payload passed to visitor</typeparam>
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] // GENERIC PARAMETERS STRICTLY CARACTERIZE THE VISITOR
-    public interface IActionPayloadPairVisitor<TFamily1, TFamily2, TDir, TNode1, TNode2, TPayload> 
-        : IActionPayloadPairVisitorClass<TFamily1, TFamily2, TDir, TPayload> 
+    public interface IActionPayloadPairVisitor<TFamily1, TFamily2, TDir, TNode1, TNode2, TPayload>
+        : IActionPayloadPairVisitorClass<TFamily1, TFamily2, TDir, TPayload>
         where TNode1 : TFamily1
         where TNode2 : TFamily2
         where TDir : IActionPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload>

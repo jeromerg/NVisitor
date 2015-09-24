@@ -24,7 +24,7 @@ namespace NVisitor.Common.Topo
             var excludedTypes = new List<TargetTypeInfo>();
 
             var concernedCandidates = new HashSet<Type>();
-            foreach (var candidate in targetCandidates)
+            foreach (Type candidate in targetCandidates)
             {
                 if (!mAllTypesWithChildren.ContainsKey(candidate))
                     excludedTypes.Add(new TargetTypeInfo(candidate, TargetTypeStatus.OutsideTypeTopology));
@@ -32,7 +32,7 @@ namespace NVisitor.Common.Topo
                     concernedCandidates.Add(candidate);
             }
 
-            foreach (var candidate in concernedCandidates)
+            foreach (Type candidate in concernedCandidates)
             {
                 bool contains = IsAnyTopologicalChildACandidate(candidate, concernedCandidates);
                 if (contains)
@@ -44,7 +44,10 @@ namespace NVisitor.Common.Topo
                 var parents = new HashSet<Type>(GetAllParents(candidate));
 
                 Type candidateInClosure = candidate;
-                if (concernedCandidates.Any(otherCandidate => otherCandidate != candidateInClosure && !parents.Contains(otherCandidate)))
+                if (
+                    concernedCandidates.Any(
+                                            otherCandidate =>
+                                            otherCandidate != candidateInClosure && !parents.Contains(otherCandidate)))
                 {
                     excludedTypes.Add(new TargetTypeInfo(candidate, TargetTypeStatus.AmbiguousMatch));
                     continue;
@@ -63,7 +66,7 @@ namespace NVisitor.Common.Topo
                 AddParentAndLink(type, type.BaseType);
             }
 
-            foreach (var implementedInterface in type.GetInterfaces())
+            foreach (Type implementedInterface in type.GetInterfaces())
             {
                 AddParentAndLink(type, implementedInterface);
             }
@@ -88,22 +91,21 @@ namespace NVisitor.Common.Topo
             if (type.BaseType != null)
             {
                 yield return type.BaseType;
-                foreach (var parentOfParent in GetAllParents(type.BaseType))
+                foreach (Type parentOfParent in GetAllParents(type.BaseType))
                     yield return parentOfParent;
             }
 
-            foreach (var implementedInterface in type.GetInterfaces())
+            foreach (Type implementedInterface in type.GetInterfaces())
             {
                 yield return implementedInterface;
-                foreach (var parentOfParent in GetAllParents(implementedInterface))
+                foreach (Type parentOfParent in GetAllParents(implementedInterface))
                     yield return parentOfParent;
             }
-
         }
 
         private bool IsAnyTopologicalChildACandidate(Type type, HashSet<Type> candidates)
         {
-            foreach (var child in mAllTypesWithChildren[type])
+            foreach (Type child in mAllTypesWithChildren[type])
             {
                 if (candidates.Contains(child))
                     return true;
@@ -114,6 +116,4 @@ namespace NVisitor.Common.Topo
             return false;
         }
     }
-    
-
 }

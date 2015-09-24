@@ -8,7 +8,7 @@ namespace NVisitor.Api.Lazy
     /// <typeparam name="TFamily">Node's family</typeparam>
     /// <typeparam name="TDir">Director type</typeparam>
     public interface ILazyVisitMapper<TFamily, TDir> : IVisitMapperMarker
-    {        
+    {
         Func<ILazyDirector<TFamily, TDir>, TFamily, IEnumerable<Pause>> GetVisitDelegate(TFamily node);
     }
 }

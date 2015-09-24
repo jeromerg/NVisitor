@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NVisitor.Api;
 using JetBrains.Annotations;
+using NVisitor.Api;
 using NVisitor.Common.Topo;
 
 namespace NVisitor.Common
@@ -17,14 +17,14 @@ namespace NVisitor.Common
         {
             mVisitorGenericOpenType = visitorGenericOpenType;
 
-            foreach (var visitorInstance in visitorInstances)
+            foreach (TVisitorClass visitorInstance in visitorInstances)
             {
                 IEnumerable<Type> claimedVisitorTypes = visitorInstance
-                                    .GetType()
-                                    .GetInterfaces()
-                                    .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == mVisitorGenericOpenType);
+                    .GetType()
+                    .GetInterfaces()
+                    .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == mVisitorGenericOpenType);
 
-                foreach (var claimedVisitorType in claimedVisitorTypes)
+                foreach (Type claimedVisitorType in claimedVisitorTypes)
                 {
                     Type claimedNodeType = claimedVisitorType.GetGenericArguments()[nodeTypeIndex];
 
@@ -52,7 +52,7 @@ namespace NVisitor.Common
             var typeTopology = new TypeTopology(nodeType);
             visitorNodeType = typeTopology.ResolveBestUnambiguousTargetType(new HashSet<Type>(mNodeTypeToVisitorMapping.Keys));
 
-            return mNodeTypeToVisitorMapping[visitorNodeType];            
+            return mNodeTypeToVisitorMapping[visitorNodeType];
         }
     }
 }

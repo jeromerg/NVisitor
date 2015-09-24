@@ -5,6 +5,7 @@ using NUnit.Framework;
 using NVisitor.Api.Lazy;
 
 // ReSharper disable once CheckNamespace
+
 namespace NVisitorTest.Api.Demo.LazyVisitor
 {
     //
@@ -17,15 +18,29 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
 
     public class NodeFamily : List<NodeFamily>
     {
-        public string Name { get; private set; }
-
         public NodeFamily(string name)
         {
             Name = name;
         }
+
+        public string Name { get; private set; }
     }
-    public class NodeA : NodeFamily { public NodeA(string name) : base(name) {}}
-    public class NodeB : NodeFamily { public NodeB(string name) : base(name) {}}
+
+    public class NodeA : NodeFamily
+    {
+        public NodeA(string name)
+            : base(name)
+        {
+        }
+    }
+
+    public class NodeB : NodeFamily
+    {
+        public NodeB(string name)
+            : base(name)
+        {
+        }
+    }
 
     // ---------------------------------------------------------------------------------------------
     // 2. You want to iterate along all leaves of a NodeFamily tree, but you are lazy and you don't
@@ -33,11 +48,12 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
     //    leaf as soon as the the visitor found it. So you create for that purpose a LazyDirector
     // ---------------------------------------------------------------------------------------------
 
-    public class FindLeavesDir : LazyDirector<NodeFamily, FindLeavesDir> 
+    public class FindLeavesDir : LazyDirector<NodeFamily, FindLeavesDir>
     {
         private readonly StringBuilder mLog = new StringBuilder();
 
-        public FindLeavesDir(params ILazyVisitorClass<NodeFamily, FindLeavesDir>[] visitors) : base(visitors)
+        public FindLeavesDir(params ILazyVisitorClass<NodeFamily, FindLeavesDir>[] visitors)
+            : base(visitors)
         {
         }
 
@@ -50,12 +66,15 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
             mLog.AppendLine(line);
         }
 
-        public string GetDumpResult() { return mLog.ToString(); }
+        public string GetDumpResult()
+        {
+            return mLog.ToString();
+        }
     }
 
     public class FindLeavesVisitors
-        : ILazyVisitor<NodeFamily, FindLeavesDir, NodeA>
-        , ILazyVisitor<NodeFamily, FindLeavesDir, NodeB>
+        : ILazyVisitor<NodeFamily, FindLeavesDir, NodeA>,
+          ILazyVisitor<NodeFamily, FindLeavesDir, NodeB>
     {
         public IEnumerable<Pause> Visit(FindLeavesDir director, NodeA node)
         {
@@ -69,23 +88,23 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
             }
 
             // continue visit: visit children
-            foreach (var child in node)
-                foreach (var pause in director.Visit(child))
+            foreach (NodeFamily child in node)
+                foreach (Pause pause in director.Visit(child))
                     yield return pause;
         }
 
         public IEnumerable<Pause> Visit(FindLeavesDir director, NodeB node)
         {
             director.Log("... visiting node {0} (NodeB's visitor is speaking)", node.Name);
- 
+
             if (node.Count == 0)
             {
                 director.CurrentLeaf = node;
                 yield return Pause.Now;
             }
 
-            foreach (var child in node)
-                foreach (var pause in director.Visit(child))
+            foreach (NodeFamily child in node)
+                foreach (Pause pause in director.Visit(child))
                     yield return pause;
         }
     }
@@ -101,23 +120,23 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
         public void InitialNodesAndVisitors()
         {
             var root = new NodeA("1")
-            {
-                new NodeB("2")
-                {
-                    new NodeA("3"), // leaf
-                    new NodeB("4") // leaf
-                },
-                new NodeA("5")      // leaf
-            };
+                       {
+                           new NodeB("2")
+                           {
+                               new NodeA("3"), // leaf
+                               new NodeB("4") // leaf
+                           },
+                           new NodeA("5") // leaf
+                       };
 
-            
+
             var director = new FindLeavesDir(new FindLeavesVisitors());
 
             IEnumerable<Pause> visitPauses = director.Visit(root);
 
             director.Log("Starting processing leaves:");
             // ReSharper disable once UnusedVariable
-            foreach (var pause in visitPauses)
+            foreach (Pause pause in visitPauses)
             {
                 director.Log("PROCESSING node " + director.CurrentLeaf.Name);
             }
@@ -131,8 +150,8 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
                             "... visiting node 4 (NodeB's visitor is speaking)\r\n" +
                             "PROCESSING node 4\r\n" +
                             "... visiting node 5 (NodeA's visitor is speaking)\r\n" +
-                            "PROCESSING node 5\r\n", director.GetDumpResult());
-
+                            "PROCESSING node 5\r\n",
+                            director.GetDumpResult());
         }
     }
 
@@ -149,5 +168,4 @@ namespace NVisitorTest.Api.Demo.LazyVisitor
     // - If the memory footprint of the collected values during the visit is too large, 
     //   so that you can only process a few collected values at once. It can be combined
     //   with a NodeFamily.Children IEnumerable collection, to load nodes in memory one after the other.
-
 }

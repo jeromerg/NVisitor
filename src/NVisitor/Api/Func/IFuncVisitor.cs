@@ -8,7 +8,7 @@ namespace NVisitor.Api.Func
     /// <typeparam name="TNode">The concrete node type supported by the visitor</typeparam>
     /// <typeparam name="TResult">Result of the Visit call</typeparam>
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] // GENERIC PARAMETERS STRICTLY CARACTERIZE THE VISITOR
-    public interface IFuncVisitor<TFamily, TDir, TNode, TResult> : IFuncVisitorClass<TFamily, TDir, TResult> 
+    public interface IFuncVisitor<TFamily, TDir, TNode, TResult> : IFuncVisitorClass<TFamily, TDir, TResult>
         where TNode : TFamily
         where TDir : IFuncDirector<TFamily, TDir, TResult>
     {

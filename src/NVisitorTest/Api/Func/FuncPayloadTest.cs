@@ -6,30 +6,38 @@ namespace NVisitorTest.Api.Func
     [TestFixture]
     public class FuncTest
     {
-        #region Node family
-        public interface INode { }
-        public class Node1 : INode { }
-        public class Node2 : INode { }
-        #endregion
+        public interface INode
+        {
+        }
 
-        #region Simplifying interfaces and classes for the Print visitors
-        public interface IPrintVisClass : IFuncVisitorClass<INode, PrintDir, string> { }
+        public class Node1 : INode
+        {
+        }
+
+        public class Node2 : INode
+        {
+        }
+
+        public interface IPrintVisClass : IFuncVisitorClass<INode, PrintDir, string>
+        {
+        }
 
         public class PrintDir : FuncDirector<INode, PrintDir, string>
         {
-            public PrintDir(params IPrintVisClass[] visitorEnumerable) : base(visitorEnumerable) { }
+            public PrintDir(params IPrintVisClass[] visitorEnumerable)
+                : base(visitorEnumerable)
+            {
+            }
         }
 
         public interface IPrintVis<TNod> : IFuncVisitor<INode, PrintDir, TNod, string>, IPrintVisClass
             where TNod : INode
-        { }
-        #endregion
-
-        #region Concrete visitors
+        {
+        }
 
         public class MyConcreteVisitors
-            : IPrintVis<Node1>
-            , IPrintVis<Node2>
+            : IPrintVis<Node1>,
+              IPrintVis<Node2>
         {
             public string Visit(PrintDir director, Node1 node)
             {
@@ -41,7 +49,6 @@ namespace NVisitorTest.Api.Func
                 return "Node2";
             }
         }
-        #endregion
 
         [Test]
         public void TestSimpleFuncVisit()

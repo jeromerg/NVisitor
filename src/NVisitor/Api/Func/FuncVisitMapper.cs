@@ -10,8 +10,9 @@ namespace NVisitor.Api.Func
     /// <typeparam name="TDir">Director type</typeparam>
     /// <typeparam name="TResult">Result Type of the visit</typeparam>
     public class FuncVisitMapper<TFamily, TDir, TResult>
-        : VisitMapperBase<TFamily, IFuncVisitorClass<TFamily, TDir, TResult>, Func<IFuncDirector<TFamily, TDir, TResult>, TFamily, TResult>>
-        , IFuncVisitMapper<TFamily, TDir, TResult>
+        : VisitMapperBase
+              <TFamily, IFuncVisitorClass<TFamily, TDir, TResult>, Func<IFuncDirector<TFamily, TDir, TResult>, TFamily, TResult>>,
+          IFuncVisitMapper<TFamily, TDir, TResult>
         where TDir : IFuncDirector<TFamily, TDir, TResult>
     {
         public FuncVisitMapper(IEnumerable<IFuncVisitorClass<TFamily, TDir, TResult>> visitors)
@@ -19,21 +20,24 @@ namespace NVisitor.Api.Func
         {
         }
 
-        protected override Func<IFuncDirector<TFamily, TDir, TResult>, TFamily, TResult> 
-            CreateVisitDelegate(TFamily node, 
+        protected override Func<IFuncDirector<TFamily, TDir, TResult>, TFamily, TResult>
+            CreateVisitDelegate(TFamily node,
                                 Type visitorNodeType,
                                 IFuncVisitorClass<TFamily, TDir, TResult> visitorInstance,
                                 Func<IFuncDirector<TFamily, TDir, TResult>, TFamily, TResult> directorDelegate)
         {
             // create the closed generic type of the visitor
-            Type visitorClosedType = typeof(IFuncVisitor<,,,>).MakeGenericType(typeof(TFamily), typeof(TDir), visitorNodeType, typeof(TResult));
+            Type visitorClosedType = typeof (IFuncVisitor<,,,>).MakeGenericType(typeof (TFamily),
+                                                                                typeof (TDir),
+                                                                                visitorNodeType,
+                                                                                typeof (TResult));
 
             // find the visit method in the closed generic type of the visitor
             MethodInfo visitMethod = visitorClosedType.GetMethod("Visit");
 
             // prepare the visit action and dispatcher it
-            return (someDirector, someNode) => (TResult) visitMethod.Invoke(visitorInstance, new object[] { someDirector, someNode });
-
+            return
+                (someDirector, someNode) => (TResult) visitMethod.Invoke(visitorInstance, new object[] {someDirector, someNode});
         }
     }
 }

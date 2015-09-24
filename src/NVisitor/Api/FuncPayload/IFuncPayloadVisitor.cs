@@ -9,7 +9,8 @@ namespace NVisitor.Api.FuncPayload
     /// <typeparam name="TResult">Result of the Visit call</typeparam>
     /// <typeparam name="TPayload">Payload for the visit call</typeparam>
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] // GENERIC PARAMETERS STRICTLY CARACTERIZE THE VISITOR
-    public interface IFuncPayloadVisitor<TFamily, TDir, TNode, TPayload, TResult> : IFuncPayloadVisitorClass<TFamily, TDir, TPayload, TResult> 
+    public interface IFuncPayloadVisitor<TFamily, TDir, TNode, TPayload, TResult>
+        : IFuncPayloadVisitorClass<TFamily, TDir, TPayload, TResult>
         where TNode : TFamily
         where TDir : IFuncPayloadDirector<TFamily, TDir, TPayload, TResult>
     {

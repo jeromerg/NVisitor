@@ -8,14 +8,26 @@ namespace NVisitorTest.Api.Lazy
     [TestFixture]
     public class LazyDirectorWithoutVisitorTest
     {
-        public interface INode {}
-        public class NodeO : INode { }
-        public class NodeA : INode { }
-        public class NodeB : NodeA {}
+        public interface INode
+        {
+        }
+
+        public class NodeO : INode
+        {
+        }
+
+        public class NodeA : INode
+        {
+        }
+
+        public class NodeB : NodeA
+        {
+        }
 
         public class Dir : LazyDirector<INode, Dir>
         {
-            public Dir(params ILazyVisitorClass<INode, Dir>[] visitors) : base(visitors)
+            public Dir(params ILazyVisitorClass<INode, Dir>[] visitors)
+                : base(visitors)
             {
             }
         }
@@ -29,7 +41,7 @@ namespace NVisitorTest.Api.Lazy
 
         [Test]
         [TestCaseSource("TestCaseSource")]
-        [ExpectedException(typeof(VisitorNotFoundException))]
+        [ExpectedException(typeof (VisitorNotFoundException))]
         public void Test(INode node)
         {
             var dir = new Dir();

@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-using NVisitor.Api.Marker;
 using JetBrains.Annotations;
+using NVisitor.Api.Marker;
 
 namespace NVisitor.Api.FuncPayload
 {

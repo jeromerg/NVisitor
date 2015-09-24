@@ -8,14 +8,26 @@ namespace NVisitorTest.Api.Action
     [TestFixture]
     public class DirectorWithoutVisitorTest
     {
-        public interface INode {}
-        public class NodeO : INode { }
-        public class NodeA : INode { }
-        public class NodeB : NodeA {}
+        public interface INode
+        {
+        }
+
+        public class NodeO : INode
+        {
+        }
+
+        public class NodeA : INode
+        {
+        }
+
+        public class NodeB : NodeA
+        {
+        }
 
         public class Dir : ActionDirector<INode, Dir>
         {
-            public Dir(params IActionVisitorClass<INode, Dir>[] visitorEnumerable) : base(visitorEnumerable)
+            public Dir(params IActionVisitorClass<INode, Dir>[] visitorEnumerable)
+                : base(visitorEnumerable)
             {
             }
         }
@@ -29,7 +41,7 @@ namespace NVisitorTest.Api.Action
 
         [Test]
         [TestCaseSource("TestCaseSource")]
-        [ExpectedException(typeof(VisitorNotFoundException))]
+        [ExpectedException(typeof (VisitorNotFoundException))]
         public void Test(INode node)
         {
             var dir = new Dir();

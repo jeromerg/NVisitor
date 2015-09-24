@@ -7,7 +7,7 @@ namespace NVisitor.Api.Action
     /// <typeparam name="TDir">The director type</typeparam>
     /// <typeparam name="TNode">The concrete node type supported by the visitor</typeparam>
     [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] // GENERIC PARAMETERS STRICTLY CARACTERIZE THE VISITOR
-    public interface IActionVisitor<TFamily, TDir, TNode> : IActionVisitorClass<TFamily, TDir> 
+    public interface IActionVisitor<TFamily, TDir, TNode> : IActionVisitorClass<TFamily, TDir>
         where TNode : TFamily
         where TDir : IActionDirector<TFamily, TDir>
     {

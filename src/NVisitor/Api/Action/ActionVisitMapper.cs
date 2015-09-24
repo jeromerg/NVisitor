@@ -9,8 +9,8 @@ namespace NVisitor.Api.Action
     /// <typeparam name="TFamily">Node's family</typeparam>
     /// <typeparam name="TDir">Director type</typeparam>
     public class ActionVisitMapper<TFamily, TDir>
-        : VisitMapperBase<TFamily, IActionVisitorClass<TFamily, TDir>, Action<IActionDirector<TFamily, TDir>, TFamily>>
-        , IActionVisitMapper<TFamily, TDir> 
+        : VisitMapperBase<TFamily, IActionVisitorClass<TFamily, TDir>, Action<IActionDirector<TFamily, TDir>, TFamily>>,
+          IActionVisitMapper<TFamily, TDir>
         where TDir : IActionDirector<TFamily, TDir>
     {
         public ActionVisitMapper(IEnumerable<IActionVisitorClass<TFamily, TDir>> visitors)
@@ -18,21 +18,20 @@ namespace NVisitor.Api.Action
         {
         }
 
-        protected override Action<IActionDirector<TFamily, TDir>, TFamily> 
-            CreateVisitDelegate(TFamily node, 
-                                Type visitorNodeType, 
-                                IActionVisitorClass<TFamily, TDir> visitorInstance, 
+        protected override Action<IActionDirector<TFamily, TDir>, TFamily>
+            CreateVisitDelegate(TFamily node,
+                                Type visitorNodeType,
+                                IActionVisitorClass<TFamily, TDir> visitorInstance,
                                 Action<IActionDirector<TFamily, TDir>, TFamily> directorDelegate)
         {
             // create the closed generic type of the visitor
-            Type visitorClosedType = typeof (IActionVisitor<,,>).MakeGenericType(typeof(TFamily), typeof(TDir), visitorNodeType);
+            Type visitorClosedType = typeof (IActionVisitor<,,>).MakeGenericType(typeof (TFamily), typeof (TDir), visitorNodeType);
 
             // find the visit method in the closed generic type of the visitor
             MethodInfo visitMethod = visitorClosedType.GetMethod("Visit");
 
             // prepare the visit action and dispatcher it
-            return (someDirector, someNode) => visitMethod.Invoke(visitorInstance, new object[] { someDirector, someNode });
-
+            return (someDirector, someNode) => visitMethod.Invoke(visitorInstance, new object[] {someDirector, someNode});
         }
     }
 }

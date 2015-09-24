@@ -8,15 +8,26 @@ namespace NVisitorTest.Api.Lazy
     [TestFixture]
     public class LazyDirectorWithConflictingVisitor
     {
-        public interface INode {}
-        public interface INode1 : INode { }
-        public interface INode2 : INode { }
-        public class MyNode : INode1, INode2 { }
+        public interface INode
+        {
+        }
+
+        public interface INode1 : INode
+        {
+        }
+
+        public interface INode2 : INode
+        {
+        }
+
+        public class MyNode : INode1, INode2
+        {
+        }
 
         public interface IConflictingVisitor
-            : ILazyVisitor<INode, MyDir, INode>
-            , ILazyVisitor<INode, MyDir, INode1>
-            , ILazyVisitor<INode, MyDir, INode2>
+            : ILazyVisitor<INode, MyDir, INode>,
+              ILazyVisitor<INode, MyDir, INode1>,
+              ILazyVisitor<INode, MyDir, INode2>
         {
         }
 
@@ -27,20 +38,10 @@ namespace NVisitorTest.Api.Lazy
 
         public class MyDir : LazyDirector<INode, MyDir>
         {
-            public MyDir(params ILazyVisitorClass<INode, MyDir>[] visitors) : base(visitors)
+            public MyDir(params ILazyVisitorClass<INode, MyDir>[] visitors)
+                : base(visitors)
             {
             }
-        }
-
-        [Test]
-        [ExpectedException(typeof(VisitorNotFoundException))]
-        public void TestWithConflictingVisitor()
-        {
-            var mockConflictingVisitor = new Mock<IConflictingVisitor>();
-            var dir = new MyDir(mockConflictingVisitor.Object);
-
-            INode node = new MyNode();
-            dir.Visit(node);
         }
 
         [Test]
@@ -59,5 +60,15 @@ namespace NVisitorTest.Api.Lazy
             mockSolvingVisitor.Verify(v => v.Visit(dir, It.Is<MyNode>(n => n == node)), Times.Once);
         }
 
+        [Test]
+        [ExpectedException(typeof (VisitorNotFoundException))]
+        public void TestWithConflictingVisitor()
+        {
+            var mockConflictingVisitor = new Mock<IConflictingVisitor>();
+            var dir = new MyDir(mockConflictingVisitor.Object);
+
+            INode node = new MyNode();
+            dir.Visit(node);
+        }
     }
 }
