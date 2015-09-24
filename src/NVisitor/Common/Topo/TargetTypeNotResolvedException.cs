@@ -37,7 +37,7 @@ namespace NVisitor.Common.Topo
             {
                 var b = new StringBuilder();
 
-                b.AppendFormat("No unambiguous Type to assign type {0} to. Candidates:\n", mType.Name);
+                b.AppendFormat("No unambiguous Type to assign type {0} to. Candidates:\n", mType.FullName);
                 foreach (var candidateInfo in mCandidateInfos)
                 {
                     b.AppendFormat("{0}: {1}", candidateInfo.Type, candidateInfo.Status);
