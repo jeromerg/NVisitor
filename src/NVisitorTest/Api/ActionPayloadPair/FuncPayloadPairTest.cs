@@ -1,10 +1,12 @@
-﻿using Moq;
+﻿using System.Diagnostics.CodeAnalysis;
+using Moq;
 using NUnit.Framework;
 using NVisitor.Api.ActionPayloadPair;
 
 namespace NVisitorTest.Api.ActionPayloadPair
 {
     [TestFixture]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class ActionPayloadPairTest
     {
         public interface ICar

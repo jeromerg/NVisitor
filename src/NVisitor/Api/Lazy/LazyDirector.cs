@@ -33,7 +33,7 @@ namespace NVisitor.Api.Lazy
 
         /// <summary>Initializes a new dispatcher with a shared dispatcher</summary>
         /// <param name="cache">shared dispatcher for all directors of this type</param>
-        public LazyDirector(ILazyVisitMapper<TFamily, TDir> cache)
+        protected LazyDirector(ILazyVisitMapper<TFamily, TDir> cache)
         {
             mCache = cache;
         }

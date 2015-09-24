@@ -7,6 +7,8 @@ namespace NVisitor.Api.FuncPayloadPair
     /// <typeparam name="TFamily1">Node1's family</typeparam>
     /// <typeparam name="TFamily2">Node2's family</typeparam>
     /// <typeparam name="TDir">Director type</typeparam>
+    /// <typeparam name="TPayload">Payload passed to visitor during the visit</typeparam>
+    /// <typeparam name="TResult">Result of the visit</typeparam>
     public interface IFuncPayloadPairVisitMapper<TFamily1, TFamily2, TDir, TPayload, TResult> : IVisitMapperMarker
         where TDir : IFuncPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload, TResult>
     {

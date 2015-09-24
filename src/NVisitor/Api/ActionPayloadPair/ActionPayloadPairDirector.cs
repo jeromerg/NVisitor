@@ -38,6 +38,7 @@ namespace NVisitor.Api.ActionPayloadPair
         /// <summary>Dispatches the call to the best visitor depending on the node's type</summary>
         /// <param name="node1">The node1 to visit</param>
         /// <param name="node2">The node2 to visit</param>
+        /// <param name="payload">payload passed to visitor</param>
         public void Visit(TFamily1 node1, TFamily2 node2, TPayload payload)
         {
             if (ReferenceEquals(node1, null))

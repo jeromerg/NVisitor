@@ -9,6 +9,7 @@ namespace NVisitor.Api.FuncPair
     /// <typeparam name="TFamily1">Node1's family</typeparam>
     /// <typeparam name="TFamily2">Node2's family</typeparam>
     /// <typeparam name="TDir">Director type</typeparam>
+    /// <typeparam name="TResult">Result of visit</typeparam>
     public class FuncPairVisitMapper<TFamily1, TFamily2, TDir, TResult>
         : PairVisitMapperBase<TFamily1,
               TFamily2,

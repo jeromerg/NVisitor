@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 using NVisitor.Common.Topo;
 
 namespace NVisitorTest.Util.Topo
 {
     [TestFixture]
+    [SuppressMessage("ReSharper", "UnusedTypeParameter")]
     public class TypeTopologyTests
     {
         public class O

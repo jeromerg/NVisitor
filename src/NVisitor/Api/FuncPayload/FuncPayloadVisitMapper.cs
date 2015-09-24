@@ -8,6 +8,8 @@ namespace NVisitor.Api.FuncPayload
     /// <summary>Map a node to its related visit-action. Used by the director to send visitor visit the node</summary>
     /// <typeparam name="TFamily">Node's family</typeparam>
     /// <typeparam name="TDir">Director type</typeparam>
+    /// <typeparam name="TPayload">Payload passed to visitor during the visit</typeparam>
+    /// <typeparam name="TResult">Result of the visit</typeparam>
     public class FuncPayloadVisitMapper<TFamily, TDir, TPayload, TResult>
         : VisitMapperBase
               <TFamily, IFuncPayloadVisitorClass<TFamily, TDir, TPayload, TResult>,

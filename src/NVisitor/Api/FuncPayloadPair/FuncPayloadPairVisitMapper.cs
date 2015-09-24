@@ -9,6 +9,8 @@ namespace NVisitor.Api.FuncPayloadPair
     /// <typeparam name="TFamily1">Node1's family</typeparam>
     /// <typeparam name="TFamily2">Node2's family</typeparam>
     /// <typeparam name="TDir">Director type</typeparam>
+    /// <typeparam name="TPayload">Payload passed to visitor during the visit</typeparam>
+    /// <typeparam name="TResult">Result of the visit</typeparam>
     public class FuncPayloadPairVisitMapper<TFamily1, TFamily2, TDir, TPayload, TResult>
         : PairVisitMapperBase<TFamily1,
               TFamily2,

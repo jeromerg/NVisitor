@@ -50,8 +50,6 @@
     <Compile Include="Model\Model.cs" />
     <Compile Include="NGitVersion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Resource\Readme.md" />
-    <None Include="Templates\GlobalAssemblyInfo.h.stg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -63,16 +61,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resource\version.rc2" />
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Generated\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resource\Assembly.cpp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

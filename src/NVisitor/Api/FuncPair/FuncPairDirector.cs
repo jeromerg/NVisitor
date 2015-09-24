@@ -13,6 +13,7 @@ namespace NVisitor.Api.FuncPair
     /// <typeparam name="TFamily1">The node1 family type</typeparam>
     /// <typeparam name="TFamily2">The node2 family type</typeparam>
     /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
+    /// <typeparam name="TResult">Result of Visit</typeparam>
     public abstract class FuncPairDirector<TFamily1, TFamily2, TDir, TResult>
         : IFuncPairDirector<TFamily1, TFamily2, TDir, TResult>
         where TDir : IFuncPairDirector<TFamily1, TFamily2, TDir, TResult>

@@ -1,10 +1,12 @@
-﻿using Moq;
+﻿using System.Diagnostics.CodeAnalysis;
+using Moq;
 using NUnit.Framework;
 using NVisitor.Api.FuncPair;
 
 namespace NVisitorTest.Api.FuncPair
 {
     [TestFixture]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class FuncPairTest
     {
         public interface ICar
@@ -120,7 +122,7 @@ namespace NVisitorTest.Api.FuncPair
             var driver = new Driver();
             var mechanic = new Mechanic();
 
-            string result = dir.Visit(bmw, driver);
+            dir.Visit(bmw, driver);
 
             mockVisitor_Bmw_Driver.Verify(v => v.Visit(dir, bmw, driver), Times.Once);
             mockVisitor_Bmw_Mechanic.Verify(v => v.Visit(dir, It.IsAny<Bmw>(), It.IsAny<Mechanic>()), Times.Never);

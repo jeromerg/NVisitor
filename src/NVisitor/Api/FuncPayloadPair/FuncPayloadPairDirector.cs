@@ -13,6 +13,8 @@ namespace NVisitor.Api.FuncPayloadPair
     /// <typeparam name="TFamily1">The node1 family type</typeparam>
     /// <typeparam name="TFamily2">The node2 family type</typeparam>
     /// <typeparam name="TDir"> Identifies the visitor's class and can contain the state of the visit</typeparam>
+    /// <typeparam name="TPayload">Payload passed to visitor during the visit</typeparam>
+    /// <typeparam name="TResult">Result of the visit</typeparam>
     public abstract class FuncPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload, TResult>
         : IFuncPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload, TResult>
         where TDir : IFuncPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload, TResult>
@@ -37,6 +39,7 @@ namespace NVisitor.Api.FuncPayloadPair
         /// <summary>Dispatches the call to the best visitor depending on the node's type</summary>
         /// <param name="node1">The node1 to visit</param>
         /// <param name="node2">The node2 to visit</param>
+        /// <param name="payload">Result of the visit</param>
         public TResult Visit(TFamily1 node1, TFamily2 node2, TPayload payload)
         {
             if (ReferenceEquals(node1, null))
