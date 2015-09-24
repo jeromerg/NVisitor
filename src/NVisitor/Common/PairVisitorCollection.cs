@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NVisitor.Api;
-using NVisitor.Common.Quality;
+using JetBrains.Annotations;
 using NVisitor.Common.Topo;
 
 namespace NVisitor.Common

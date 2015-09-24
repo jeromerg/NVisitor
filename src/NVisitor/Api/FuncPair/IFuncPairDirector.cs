@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using NVisitor.Api.Marker;
-using NVisitor.Common.Quality;
 
 namespace NVisitor.Api.FuncPair
 {

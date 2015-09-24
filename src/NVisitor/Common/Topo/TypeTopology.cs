@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NVisitor.Common.Quality;
+using JetBrains.Annotations;
 
 namespace NVisitor.Common.Topo
 {
