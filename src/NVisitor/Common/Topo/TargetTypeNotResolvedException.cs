@@ -5,8 +5,7 @@ using System.Text;
 
 namespace NVisitor.Common.Topo
 {
-    [Serializable]
-    internal class TargetTypeNotResolvedException : Exception
+    public class TargetTypeNotResolvedException : Exception
     {
         private readonly Type mType;
         private readonly List<TargetTypeInfo> mCandidateInfos = new List<TargetTypeInfo>();
@@ -15,11 +14,6 @@ namespace NVisitor.Common.Topo
         {
             mType = type;
             mCandidateInfos.AddRange(candidateStatuses);
-        }
-
-        protected TargetTypeNotResolvedException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
         }
 
         public Type Type
