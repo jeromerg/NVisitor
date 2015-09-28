@@ -36,6 +36,9 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -46,6 +49,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtensionExample\CarOperation\CarOperationDirector.cs" />
+    <Compile Include="ExtensionExample\CarOperation\CarOperationVisitMapper.cs" />
+    <Compile Include="ExtensionExample\CarOperation\ICar.cs" />
+    <Compile Include="ExtensionExample\CarOperation\ICarOperationDirector.cs" />
+    <Compile Include="ExtensionExample\CarOperation\ICarOperationVisitMapper.cs" />
+    <Compile Include="ExtensionExample\CarOperation\ICarOperationImp.cs" />
+    <Compile Include="ExtensionExample\CarOperation\ICarOperationVisitorClass.cs" />
+    <Compile Include="ExtensionExample\CarOperation\IOperation.cs" />
+    <Compile Include="ExtensionExample\Test\CorrFuncPairTest.cs" />
     <Compile Include="Api\FuncPair\FuncPayloadPairTest.cs" />
     <Compile Include="Api\ActionPayload\ActionPayloadTest.cs" />
     <Compile Include="Api\ActionPayloadPair\FuncPayloadPairTest.cs" />
@@ -70,6 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ExtensionExample\CarOperation\readme.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
