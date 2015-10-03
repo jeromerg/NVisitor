@@ -80,6 +80,7 @@
     <Compile Include="Api\Demo\LazyVisitorDemo.cs" />
     <Compile Include="Util\Topo\TypeTopologyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\Topo\TypeTopologyCoAndContravarianceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ExtensionExample\CarOperation\readme.md" />

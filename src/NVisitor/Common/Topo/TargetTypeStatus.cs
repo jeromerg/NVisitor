@@ -3,7 +3,7 @@
     public enum TargetTypeStatus
     {
         OutsideTypeTopology,
-        ChildClassTakesPrecedence,
+        DoesntHavePrecedence,
         AmbiguousMatch
     }
 }

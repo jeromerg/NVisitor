@@ -49,8 +49,7 @@ namespace NVisitor.Common
             if (ReferenceEquals(nodeType, null))
                 throw new ArgumentNullException("nodeType");
 
-            var typeTopology = new TypeTopology(nodeType);
-            visitorNodeType = typeTopology.ResolveBestUnambiguousTargetType(new HashSet<Type>(mNodeTypeToVisitorMapping.Keys));
+            visitorNodeType = TypeHelper.FindBestCandidateToAssignFrom(nodeType, mNodeTypeToVisitorMapping.Keys);
 
             return mNodeTypeToVisitorMapping[visitorNodeType];
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 using NVisitor.Common.Topo;
@@ -53,8 +52,7 @@ namespace NVisitorTest.Util.Topo
         [Test, ExpectedException(typeof (TargetTypeNotResolvedException))]
         public void TestA_B()
         {
-            var topo = new TypeTopology(typeof (A));
-            Type result = topo.ResolveBestUnambiguousTargetType(new HashSet<Type> {typeof (B)});
+            Type result = TypeHelper.FindBestCandidateToAssignFrom(typeof (A), new[] {typeof (B)});
 
             Assert.AreEqual(null, result);
         }
@@ -62,8 +60,7 @@ namespace NVisitorTest.Util.Topo
         [Test]
         public void TestB_A()
         {
-            var topo = new TypeTopology(typeof (B));
-            Type result = topo.ResolveBestUnambiguousTargetType(new HashSet<Type> {typeof (A)});
+            Type result = TypeHelper.FindBestCandidateToAssignFrom(typeof (B), new[] {typeof (A)});
 
             Assert.AreEqual(typeof (A), result);
         }
@@ -72,8 +69,7 @@ namespace NVisitorTest.Util.Topo
         [Test, ExpectedException(typeof (TargetTypeNotResolvedException))]
         public void TestC_IC1_IC2()
         {
-            var topo = new TypeTopology(typeof (C));
-            Type result = topo.ResolveBestUnambiguousTargetType(new HashSet<Type> {typeof (IC1), typeof (IC2)});
+            Type result = TypeHelper.FindBestCandidateToAssignFrom(typeof (C), new[] {typeof (IC1), typeof (IC2)});
 
             Assert.AreEqual(null, result);
         }
@@ -81,38 +77,15 @@ namespace NVisitorTest.Util.Topo
         [Test]
         public void TestC_IC1_IC2_C()
         {
-            var topo = new TypeTopology(typeof (C));
-            Type result = topo.ResolveBestUnambiguousTargetType(new HashSet<Type> {typeof (IC1), typeof (IC2), typeof (C)});
+            Type result = TypeHelper.FindBestCandidateToAssignFrom(typeof (C), new[] {typeof (IC1), typeof (IC2), typeof (C)});
 
             Assert.AreEqual(typeof (C), result);
-        }
-
-        [Test(Description = "Contravariant generic types not supported yet")]
-        [ExpectedException(typeof (TargetTypeNotResolvedException))]
-        public void TestContravariant()
-        {
-            var topo = new TypeTopology(typeof (Covariant<A>));
-            Type result = topo.ResolveBestUnambiguousTargetType(new HashSet<Type> {typeof (ICovariant<B>)});
-
-            Assert.AreEqual(typeof (ICovariant<A>), result);
-        }
-
-
-        [Test(Description = "Covariant generic types not supported yet")]
-        [ExpectedException(typeof (TargetTypeNotResolvedException))]
-        public void TestCovariance()
-        {
-            var topo = new TypeTopology(typeof (Covariant<B>));
-            Type result = topo.ResolveBestUnambiguousTargetType(new HashSet<Type> {typeof (ICovariant<A>)});
-
-            Assert.AreEqual(typeof (ICovariant<A>), result);
         }
 
         [Test]
         public void TestO()
         {
-            var topo = new TypeTopology(typeof (O));
-            Type result = topo.ResolveBestUnambiguousTargetType(new HashSet<Type> {typeof (O)});
+            Type result = TypeHelper.FindBestCandidateToAssignFrom(typeof (O), new[] {typeof (O)});
 
             Assert.AreEqual(typeof (O), result);
         }
@@ -120,8 +93,7 @@ namespace NVisitorTest.Util.Topo
         [Test, ExpectedException(typeof (TargetTypeNotResolvedException))]
         public void TestO_A()
         {
-            var topo = new TypeTopology(typeof (O));
-            Type result = topo.ResolveBestUnambiguousTargetType(new HashSet<Type> {typeof (A)});
+            Type result = TypeHelper.FindBestCandidateToAssignFrom(typeof (O), new[] {typeof (A)});
 
             Assert.AreEqual(null, result);
         }
@@ -129,8 +101,7 @@ namespace NVisitorTest.Util.Topo
         [Test]
         public void TestZ_X_Y()
         {
-            var topo = new TypeTopology(typeof (Z));
-            Type result = topo.ResolveBestUnambiguousTargetType(new HashSet<Type> {typeof (Y), typeof (X)});
+            Type result = TypeHelper.FindBestCandidateToAssignFrom(typeof (Z), new[] {typeof (Y), typeof (X)});
 
             Assert.AreEqual(typeof (Y), result);
         }

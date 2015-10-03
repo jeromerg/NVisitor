@@ -116,7 +116,7 @@
     <Compile Include="Common\Topo\TargetTypeInfo.cs" />
     <Compile Include="Common\Topo\TargetTypeNotResolvedException.cs" />
     <Compile Include="Common\Topo\TargetTypeStatus.cs" />
-    <Compile Include="Common\Topo\TypeTopology.cs" />
+    <Compile Include="Common\Topo\TypeHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Version\src\NGitVersion\NGitVersion.csproj">
