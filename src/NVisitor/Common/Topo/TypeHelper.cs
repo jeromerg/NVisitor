@@ -8,18 +8,19 @@ namespace NVisitor.Common.Topo
     {
         /// <exception cref="TargetTypeNotResolvedException"></exception>
         [NotNull]
-        public static Type FindBestCandidateToAssignFrom([NotNull] Type typeToAssignTo, [NotNull] IEnumerable<Type> targetCandidates)
+        public static Type FindBestCandidateToAssignFrom([NotNull] Type typeToAssignTo,
+                                                         [NotNull] IEnumerable<Type> targetCandidates)
         {
             if (typeToAssignTo == null) throw new ArgumentNullException("typeToAssignTo");
             if (targetCandidates == null) throw new ArgumentNullException("targetCandidates");
 
-            List<TargetTypeInfo> debugInfo = new List<TargetTypeInfo>();
-            List<Type> validCandidates = new List<Type>();
-            
+            var debugInfo = new List<TargetTypeInfo>();
+            var validCandidates = new List<Type>();
+
             // exclude candidate that are not assignable from the type to pass
-            foreach (var targetCandidate in targetCandidates)
+            foreach (Type targetCandidate in targetCandidates)
             {
-                if (!targetCandidate.IsAssignableFrom(typeToAssignTo)) 
+                if (!targetCandidate.IsAssignableFrom(typeToAssignTo))
                     debugInfo.Add(new TargetTypeInfo(targetCandidate, TargetTypeStatus.OutsideTypeTopology));
                 else
                     validCandidates.Add(targetCandidate);
@@ -30,7 +31,7 @@ namespace NVisitor.Common.Topo
             {
                 for (int j = validCandidates.Count - 1; j >= 0; j--)
                 {
-                    if(i == j)
+                    if (i == j)
                         continue;
 
                     Type typeI = validCandidates[i];
@@ -49,7 +50,7 @@ namespace NVisitor.Common.Topo
             // validate that only one candidate remains
             if (validCandidates.Count != 1)
             {
-                foreach (var remainingCandidate in validCandidates)
+                foreach (Type remainingCandidate in validCandidates)
                     debugInfo.Add(new TargetTypeInfo(remainingCandidate, TargetTypeStatus.AmbiguousMatch));
 
                 throw new TargetTypeNotResolvedException(typeToAssignTo, debugInfo);

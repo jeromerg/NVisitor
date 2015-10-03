@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NVisitorTest.ExtensionExample.CarOperation
 {
-    [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")] 
+    [SuppressMessage("ReSharper", "TypeParameterCanBeVariant")]
     public interface ICarOperationImp<TOperation, TCar, TResult>
         : ICarOperationVisitorClass
         where TOperation : IOperation<TResult>

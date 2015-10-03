@@ -1,6 +1,13 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace NVisitorTest.ExtensionExample.CarOperation
 {
-    public interface IOperation { }
+    public interface IOperation
+    {
+    }
 
-    public interface IOperation<TResult> : IOperation {}
+    [SuppressMessage("ReSharper", "UnusedTypeParameter")]
+    public interface IOperation<TResult> : IOperation
+    {
+    }
 }

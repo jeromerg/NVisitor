@@ -33,22 +33,6 @@ namespace NVisitorTest.Util.Topo
         {
         }
 
-        public interface ICovariant<out T>
-        {
-        }
-
-        public class Covariant<T> : ICovariant<T>
-        {
-        }
-
-        public interface IContravariant<in T>
-        {
-        }
-
-        public class Contravariant<T> : IContravariant<T>
-        {
-        }
-
         [Test, ExpectedException(typeof (TargetTypeNotResolvedException))]
         public void TestA_B()
         {

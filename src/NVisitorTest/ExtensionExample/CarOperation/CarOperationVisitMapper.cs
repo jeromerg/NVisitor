@@ -34,8 +34,9 @@ namespace NVisitorTest.ExtensionExample.CarOperation
                 .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof (IOperation<>))
                 .ToList();
 
-            if(operationOpenTypes.Count != 1)
-                throw new ArgumentException(string.Format("Type {0} must implement IOperation once and only once", operation.GetType().FullName));
+            if (operationOpenTypes.Count != 1)
+                throw new ArgumentException(string.Format("Type {0} must implement IOperation once and only once",
+                                                          operation.GetType().FullName));
 
             Type resultType = operationOpenTypes[0].GetGenericArguments()[0];
 
@@ -47,7 +48,7 @@ namespace NVisitorTest.ExtensionExample.CarOperation
 
             // prepare the visit action and dispatcher it
             return (someDirector, operation1, car1) =>
-                     visitMethod.Invoke(visitorInstance, new object[] {someDirector, operation1, car1});
+                   visitMethod.Invoke(visitorInstance, new object[] {someDirector, operation1, car1});
         }
     }
 }

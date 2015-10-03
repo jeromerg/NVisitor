@@ -38,7 +38,7 @@ namespace NVisitorTest.Api.Demo.ActionVisitor
 
     public class DumpDir : ActionDirector<NodeFamily, DumpDir>
     {
-        public StringBuilder StringBuilder = new StringBuilder();
+        public readonly StringBuilder StringBuilder = new StringBuilder();
 
         public DumpDir(params IActionVisitorClass<NodeFamily, DumpDir>[] visitorArray)
             : base(visitorArray)

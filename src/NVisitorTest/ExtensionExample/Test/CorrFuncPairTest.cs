@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using NVisitor.Api;
 using NVisitorTest.ExtensionExample.CarOperation;
 
@@ -43,14 +42,14 @@ namespace NVisitorTest.ExtensionExample.Test
                 return "OperationA on Bmw";
             }
 
-            public string Perform(ICarOperationDirector director, OperationA operation, Vw car)
-            {
-                return "OperationA on Vw";
-            }
-
             public string Perform(ICarOperationDirector director, OperationA operation, ICar car)
             {
                 return "OperationA on a car";
+            }
+
+            public string Perform(ICarOperationDirector director, OperationA operation, Vw car)
+            {
+                return "OperationA on Vw";
             }
 
             public string Perform(ICarOperationDirector director, OperationB operation, Vw car)
@@ -67,7 +66,7 @@ namespace NVisitorTest.ExtensionExample.Test
         [Test]
         public void TestSimpleActionVisit()
         {
-            var dir = new CarOperationDirector(new ICarOperationVisitorClass[] { new CarOperationImp() });
+            var dir = new CarOperationDirector(new ICarOperationVisitorClass[] {new CarOperationImp()});
 
             string result1 = dir.Perform(new OperationA(), new Bmw());
             Assert.AreEqual("OperationA on Bmw", result1);
@@ -77,17 +76,15 @@ namespace NVisitorTest.ExtensionExample.Test
 
             try
             {
-                string result4 = dir.Perform(new OperationB(), new Bmw());
+                dir.Perform(new OperationB(), new Bmw());
                 Assert.Fail();
             }
-            catch (VisitorNotFoundException e)
+            catch (VisitorNotFoundException)
             {
-                
             }
 
             int result3 = dir.Perform(new OperationC(), new Vw());
             Assert.AreEqual(7, result3);
-
         }
     }
 }
