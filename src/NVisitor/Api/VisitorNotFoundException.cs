@@ -27,7 +27,10 @@ namespace NVisitor.Api
                            exception.Type.FullName);
 
             foreach (TargetTypeInfo candidateInfo in exception.CandidateInfos)
-                b.AppendFormat("\t{0}: {1}\n", candidateInfo.Type, candidateInfo.Status);
+            {
+                b.AppendFormat("{0,-22}: {1}", candidateInfo.Status, candidateInfo.Type);
+                b.AppendLine();
+            }
 
             return b.ToString();
         }
