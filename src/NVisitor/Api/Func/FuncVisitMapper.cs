@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NVisitor.Api.Common;
+using NVisitor.Common;
 
 namespace NVisitor.Api.Func
 {
@@ -37,7 +38,7 @@ namespace NVisitor.Api.Func
 
             // prepare the visit action and dispatcher it
             return
-                (someDirector, someNode) => (TResult) visitMethod.Invoke(visitorInstance, new object[] {someDirector, someNode});
+                (someDirector, someNode) => (TResult)InvokeUtil.InvokeWithUnwrapper(visitMethod, visitorInstance, new object[] { someDirector, someNode });
         }
     }
 }

@@ -9,11 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NVisitorTest</RootNamespace>
     <AssemblyName>NVisitorTest</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
@@ -49,6 +52,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ActionPair\UnwrapExceptionTest.cs" />
+    <Compile Include="Api\ActionPayloadPair\UnwrapExceptionTest.cs" />
+    <Compile Include="Api\ActionPayload\UnwrapExceptionTest.cs" />
+    <Compile Include="Api\Action\UnwrapExceptionTest.cs" />
+    <Compile Include="Api\FuncPair\UnwrapExceptionTest.cs" />
+    <Compile Include="Api\FuncPayloadPair\UnwrapExceptionTest.cs" />
+    <Compile Include="Api\FuncPayload\UnwrapExceptionTest.cs" />
+    <Compile Include="Api\Func\UnwrapExceptionTest.cs" />
+    <Compile Include="Api\Lazy\UnwrapExceptionTest.cs" />
     <Compile Include="ExtensionExample\CarOperation\CarOperationDirector.cs" />
     <Compile Include="ExtensionExample\CarOperation\CarOperationVisitMapper.cs" />
     <Compile Include="ExtensionExample\CarOperation\ICar.cs" />

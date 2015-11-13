@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NVisitor.Api.Common;
+using NVisitor.Common;
 
 namespace NVisitor.Api.Action
 {
@@ -31,7 +32,7 @@ namespace NVisitor.Api.Action
             MethodInfo visitMethod = visitorClosedType.GetMethod("Visit");
 
             // prepare the visit action and dispatcher it
-            return (someDirector, someNode) => visitMethod.Invoke(visitorInstance, new object[] {someDirector, someNode});
+            return (someDirector, someNode) => InvokeUtil.InvokeWithUnwrapper(visitMethod, visitorInstance, new object[] {someDirector, someNode});
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NVisitor.Api.Common;
+using NVisitor.Common;
 
 namespace NVisitorTest.ExtensionExample.CarOperation
 {
@@ -48,7 +49,7 @@ namespace NVisitorTest.ExtensionExample.CarOperation
 
             // prepare the visit action and dispatcher it
             return (someDirector, operation1, car1) =>
-                   visitMethod.Invoke(visitorInstance, new object[] {someDirector, operation1, car1});
+                   InvokeUtil.InvokeWithUnwrapper(visitMethod, visitorInstance, new object[] { someDirector, operation1, car1 });
         }
     }
 }
