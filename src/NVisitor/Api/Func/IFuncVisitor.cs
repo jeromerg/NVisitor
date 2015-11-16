@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace NVisitor.Api.Func
 {
@@ -16,6 +17,6 @@ namespace NVisitor.Api.Func
         /// <param name="director">director to continue the visit or read/write into the director's state </param>
         /// <param name="node">The node to visit</param>
         /// <returns>The result of the visit</returns>
-        TResult Visit(TDir director, TNode node);
+        TResult Visit([NotNull] TDir director, [NotNull] TNode node);
     }
 }

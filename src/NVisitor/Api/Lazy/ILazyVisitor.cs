@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace NVisitor.Api.Lazy
 {
@@ -15,6 +16,6 @@ namespace NVisitor.Api.Lazy
         /// <summary>The visit method to implement</summary>
         /// <param name="director">director to continue the visit or read/write into the director's state </param>
         /// <param name="node">The node to visit</param>
-        IEnumerable<Pause> Visit(TDir director, TNode node);
+        IEnumerable<Pause> Visit([NotNull] TDir director, [NotNull] TNode node);
     }
 }

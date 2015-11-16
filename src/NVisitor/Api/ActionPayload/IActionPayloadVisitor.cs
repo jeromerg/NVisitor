@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace NVisitor.Api.ActionPayload
 {
@@ -17,6 +18,6 @@ namespace NVisitor.Api.ActionPayload
         /// <param name="node">The node to visit</param>
         /// <param name="payload">The payload to pass to the visitor during the visit</param>
         /// <returns>The result of the visit</returns>
-        void Visit(TDir director, TNode node, TPayload payload);
+        void Visit([NotNull] TDir director, [NotNull] TNode node, TPayload payload);
     }
 }

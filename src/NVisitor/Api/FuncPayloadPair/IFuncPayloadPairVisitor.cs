@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace NVisitor.Api.FuncPayloadPair
 {
@@ -22,6 +23,6 @@ namespace NVisitor.Api.FuncPayloadPair
         /// <param name="node1">The node1 to visit</param>
         /// <param name="node2">The node2 to visit</param>
         /// <param name="payload">Payload passed to visitor during the visit</param>
-        TResult Visit(TDir director, TNode1 node1, TNode2 node2, TPayload payload);
+        TResult Visit([NotNull] TDir director, [NotNull] TNode1 node1, [NotNull] TNode2 node2, TPayload payload);
     }
 }
