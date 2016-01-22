@@ -43,7 +43,7 @@ namespace NVisitor.Api.FuncPayload
         public TResult Visit(TFamily node, TPayload payload)
         {
             if (ReferenceEquals(node, null))
-                throw new ArgumentNullException("node");
+                throw new ArgumentNullException("node", "The node passed to the director's Visit method cannot be null");
 
             Func<IFuncPayloadDirector<TFamily, TDir, TPayload, TResult>, TFamily, TPayload, TResult> visitAction;
             try

@@ -38,10 +38,10 @@ namespace NVisitor.Api.ActionPair
         public void Visit(TFamily1 node1, TFamily2 node2)
         {
             if (ReferenceEquals(node1, null))
-                throw new ArgumentNullException("node1");
+                throw new ArgumentNullException("node1", "The node passed to the director's Visit method cannot be null");
 
             if (ReferenceEquals(node2, null))
-                throw new ArgumentNullException("node2");
+                throw new ArgumentNullException("node2", "The node passed to the director's Visit method cannot be null");
 
             Action<IActionPairDirector<TFamily1, TFamily2, TDir>, TFamily1, TFamily2> visitAction;
             try

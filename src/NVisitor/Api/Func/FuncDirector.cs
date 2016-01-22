@@ -32,7 +32,7 @@ namespace NVisitor.Api.Func
         public TResult Visit(TFamily node)
         {
             if (ReferenceEquals(node, null))
-                throw new ArgumentNullException("node");
+                throw new ArgumentNullException("node", "The node passed to the director's Visit method cannot be null");
 
             Func<IFuncDirector<TFamily, TDir, TResult>, TFamily, TResult> visitAction;
             try

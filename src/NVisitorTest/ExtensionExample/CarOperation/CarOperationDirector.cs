@@ -22,7 +22,7 @@ namespace NVisitorTest.ExtensionExample.CarOperation
         public TResult Perform<TResult>(IOperation<TResult> operation, ICar car)
         {
             if (ReferenceEquals(operation, null))
-                throw new ArgumentNullException("operation");
+                throw new ArgumentNullException("operation", "The operation passed to the director's Visit method cannot be null");
 
             if (ReferenceEquals(car, null))
                 throw new ArgumentNullException("car");

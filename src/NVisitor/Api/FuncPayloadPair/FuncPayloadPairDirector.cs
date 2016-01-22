@@ -43,10 +43,10 @@ namespace NVisitor.Api.FuncPayloadPair
         public TResult Visit(TFamily1 node1, TFamily2 node2, TPayload payload)
         {
             if (ReferenceEquals(node1, null))
-                throw new ArgumentNullException("node1");
+                throw new ArgumentNullException("node1", "The node passed to the director's Visit method cannot be null");
 
             if (ReferenceEquals(node2, null))
-                throw new ArgumentNullException("node2");
+                throw new ArgumentNullException("node2", "The node passed to the director's Visit method cannot be null");
 
             Func<IFuncPayloadPairDirector<TFamily1, TFamily2, TDir, TPayload, TResult>, TFamily1, TFamily2, TPayload, TResult>
                 visitAction;

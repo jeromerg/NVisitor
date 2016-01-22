@@ -36,7 +36,7 @@ namespace NVisitor.Api.Action
         public void Visit(TFamily node)
         {
             if (ReferenceEquals(node, null))
-                throw new ArgumentNullException("node");
+                throw new ArgumentNullException("node", "The node passed to the director's Visit method cannot be null");
 
             Action<IActionDirector<TFamily, TDir>, TFamily> visitAction;
             try

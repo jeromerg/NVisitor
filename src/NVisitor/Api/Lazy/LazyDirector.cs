@@ -43,7 +43,7 @@ namespace NVisitor.Api.Lazy
         public IEnumerable<Pause> Visit(TFamily node)
         {
             if (ReferenceEquals(node, null))
-                throw new ArgumentNullException("node");
+                throw new ArgumentNullException("node", "The node passed to the director's Visit method cannot be null");
 
             Func<ILazyDirector<TFamily, TDir>, TFamily, IEnumerable<Pause>> visitFunction;
             try

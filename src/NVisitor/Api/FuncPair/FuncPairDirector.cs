@@ -40,10 +40,10 @@ namespace NVisitor.Api.FuncPair
         public TResult Visit(TFamily1 node1, TFamily2 node2)
         {
             if (ReferenceEquals(node1, null))
-                throw new ArgumentNullException("node1");
+                throw new ArgumentNullException("node1", "The node passed to the director's Visit method cannot be null");
 
             if (ReferenceEquals(node2, null))
-                throw new ArgumentNullException("node2");
+                throw new ArgumentNullException("node2", "The node passed to the director's Visit method cannot be null");
 
             Func<IFuncPairDirector<TFamily1, TFamily2, TDir, TResult>, TFamily1, TFamily2, TResult> visitAction;
             try
